@@ -1,0 +1,39 @@
+html
+  head
+    link(rel="stylesheet" href="/public/css/styles.css")
+    title Cost Of Loss Calculator
+
+  body
+    div(id="form-container")
+      h1(id="form-title") [FORM TITLE TEXT]
+
+      - var nameArr = [start-date, end-date, company-industry, labor-code, annual-salary, hourly-salary]
+
+      // validate the date so that the start date must be before the end-date
+      form(id="form" action="")
+        div(class="form-group")
+          label(for="start-date")
+          input(type="date" id="start-date" class="input-item" name="start-date")
+        div(class="form-group")
+          label(for="end-date")
+          input(type="date" id="end-date" class="input-item" name="end-date")
+        div(class="form-group")
+          label(for="company-industry")
+          input(type="text" id="company-industry" class="input-item" name="company-industry")
+        div(class="form-group")
+          label(for="labor-code")
+          input(type="date" id="labor-code" class="input-item" name="labor-code")
+
+        div(class="form-group")
+          label(class="switch")
+            input(type="checkbox")
+            span(class="slider round")
+        div(class="form-group")
+          label(for="annual-salary")
+          input(type="text" id="annual-salary" class="input-item" name="annual-salary")
+        div(class="form-group")
+          label(for="hourly-salary")
+          input(type="text" id="hourly-salary" class="input-item" name="hourly-salary")
+
+        div(class="form-group")
+          input(type="submit" value="Submit" class="input-item")
