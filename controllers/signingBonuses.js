@@ -42,4 +42,22 @@ const saveNewSigningBonus = async (req, res) => {
   }
 }
 
-module.exports = { getAllSigningBonuses, getSigningBonusBySlug, saveNewSigningBonus }
+const patchSigningBonus = async (req, res) => {
+  try {
+    const { slug } = req.params // ADD MIDDLEWARE TO CHECK THIS
+    const { amount } = req.body
+    const signingBonus = await models.SigningBonus.findOne({
+      where: { slug },
+      attributes: ['company', 'amount', 'slug']
+    })
+
+    signingBonus.amount = amount
+    await signingBonus.save()
+
+    return res.status(201).send(signingBonus)
+  } catch (error) {
+    return res.status(500).send('Unable to update recruiter fee, please try again')
+  }
+}
+
+module.exports = { getAllSigningBonuses, getSigningBonusBySlug, saveNewSigningBonus, patchSigningBonus }

@@ -17,7 +17,7 @@ const getRecruiterFeeById = async (req, res) => {
     const { id } = req.params
     const recruitFee = await models.RecruiterFee.findOne({
       where: { id },
-      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary']
+      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary'] // should the percentage be displayed as an integer or with a decimal?
     })
 
     return recruitFee
@@ -31,11 +31,11 @@ const getRecruiterFeeById = async (req, res) => {
 const saveNewRecruiterFee = async (req, res) => {
   try {
     const {
-      discipline, percentage, amount, salary
+      discipline, percentage, amount, salary // currently, percentage is entered in as a decimal and converted to an integer. Not sure of the best way to display it as a percentage, though.
     } = req.body
 
     const recruiterFee = await models.RecruiterFee.create({
-      discipline, percentage, amount, salary
+      discipline, percentage: percentage * 100, amount, salary
     })
 
     return res.status(201).send(recruiterFee)
@@ -44,4 +44,24 @@ const saveNewRecruiterFee = async (req, res) => {
   }
 }
 
-module.exports = { getAllRecruiterFees, getRecruiterFeeById, saveNewRecruiterFee }
+const patchRecruiterFee = async (req, res) => {
+  try {
+    const { id } = req.params // ADD MIDDLEWARE TO CHECK THIS
+    const { percentage, amount, salary } = req.body
+    const recruiterFee = await models.RecruiterFee.findOne({
+      where: { id },
+      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary']
+    })
+
+    recruiterFee.percentage = percentage * 100
+    recruiterFee.amount = amount
+    recruiterFee.salary = salary
+    await recruiterFee.save()
+
+    return res.status(201).send(recruiterFee)
+  } catch (error) {
+    return res.status(500).send('Unable to update recruiter fee, please try again')
+  }
+}
+
+module.exports = { getAllRecruiterFees, getRecruiterFeeById, saveNewRecruiterFee, patchRecruiterFee }

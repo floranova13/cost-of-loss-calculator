@@ -1,6 +1,6 @@
 const jobPostings = require('../controllers/jobPostings')
 
-const checkRoute = async (req, res, next) => {
+const checkJobPostingsRoute = async (req, res, next) => {
   try {
     if (!req.params.slug) {
       return await (jobPostings.getAllJobPostings(req, res))
@@ -12,4 +12,4 @@ const checkRoute = async (req, res, next) => {
   }
 }
 
-module.exports = { checkRoute }
+module.exports = { checkJobPostingsRoute }
