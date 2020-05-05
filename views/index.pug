@@ -1,39 +1,57 @@
 html
   head
     link(rel="stylesheet" href="/public/css/styles.css")
+    script(src="/public/javascript/scripts.js")
     title Cost Of Loss Calculator
 
   body
     div(id="form-container")
-      h1(id="form-title") [FORM TITLE TEXT]
+      h1(id="form-title") Cost Calculator
 
       - var nameArr = [start-date, end-date, company-industry, labor-code, annual-salary, hourly-salary]
 
       // validate the date so that the start date must be before the end-date
       form(id="form" action="")
         div(class="form-group")
-          label(for="start-date")
+          label(for="start-date") Start Date
           input(type="date" id="start-date" class="input-item" name="start-date")
         div(class="form-group")
-          label(for="end-date")
+          label(for="end-date") End Date
           input(type="date" id="end-date" class="input-item" name="end-date")
         div(class="form-group")
-          label(for="company-industry")
+          label(for="company-industry") Company Industry
           input(type="text" id="company-industry" class="input-item" name="company-industry")
         div(class="form-group")
-          label(for="labor-code")
-          input(type="date" id="labor-code" class="input-item" name="labor-code")
+          label(for="labor-code") Labor NAICS Code
+          input(type="text" id="labor-code" class="input-item" name="labor-code")
 
-        div(class="form-group")
+        div(class="form-group" id="")
+          div(id="salary-switch-label") Hourly
           label(class="switch")
-            input(type="checkbox")
+            input(type="checkbox" id="salary-toggle")
             span(class="slider round")
-        div(class="form-group")
-          label(for="annual-salary")
+          div(id="salary-switch-label") Annual
+
+        // div(class="toggleWrapper")
+            input(type="checkbox" class="dn" id="dn")
+            label(for="dn" class="toggle")
+              span(class="toggle__handler")
+                span(class="crater crater--1")
+                span(class="crater crater--2")
+                span(class="crater crater--3")
+              span(class="star star--1")
+              span(class="star star--2")
+              span(class="star star--3")
+              span(class="star star--4")
+              span(class="star star--5")
+              span(class="star star--6")
+
+        div(class="form-group" id="annual-salary-group")
+          label(for="annual-salary") Annual Salary
           input(type="text" id="annual-salary" class="input-item" name="annual-salary")
         div(class="form-group")
-          label(for="hourly-salary")
+          label(for="hourly-salary" id="hourly-salary-group") Hourly Salary
           input(type="text" id="hourly-salary" class="input-item" name="hourly-salary")
 
         div(class="form-group")
-          input(type="submit" value="Submit" class="input-item")
+          input(type="submit" value="Submit" class="input-item" id="form-submit-button")

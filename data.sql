@@ -36,3 +36,23 @@ CREATE TABLE recruiter_fees (
   updatedAt DATETIME DEFAULT NOW() ON UPDATE NOW(),
   deletedAt DATETIME
 );
+
+CREATE TABLE employee ( /* SHOULD NAME BE ADDED? */
+  id INT auto_increment PRIMARY KEY,
+  periodStart DATE,
+  periodEnd DATE,
+  occupationalSpecialty VARCHAR(255),
+  jobTitle VARCHAR(255),
+  laborCode INT,
+  annualSalary INT,
+  hourlySalary INT,
+  degree VARCHAR(255),
+  externalCorporateRecruiter TINYINT,
+  signOnBonus TINYINT,
+  relocationBonus TINYINT,
+  createdAt DATETIME DEFAULT NOW(),
+  updatedAt DATETIME DEFAULT NOW() ON UPDATE NOW(),
+  deletedAt DATETIME
+);
+
+
