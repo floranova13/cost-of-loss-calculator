@@ -1,12 +1,14 @@
-CREATE DATABASE open_avenues_calculator;
+DROP DATABASE openAvenues;
 
-CREATE USER 'open_avenues'@'localhost' IDENTIFIED WITH mysql_native_password BY 'tester';
+CREATE DATABASE openAvenues;
 
-GRANT ALL ON open_avenues_calculator.* TO 'open_avenues'@'localhost';
+CREATE USER 'openAvenues'@'localhost' IDENTIFIED WITH mysql_native_password BY 'tester';
 
-USE open_avenues_calculator;
+GRANT ALL ON openAvenues.* TO 'openAvenues'@'localhost';
 
-CREATE TABLE signing_bonuses (
+USE openAvenues;
+
+CREATE TABLE signingBonuses (
   id INT auto_increment PRIMARY KEY,
   name VARCHAR(255),
   amount INT,
@@ -16,7 +18,7 @@ CREATE TABLE signing_bonuses (
   deletedAt DATETIME
 );
 
-CREATE TABLE job_postings (
+CREATE TABLE jobPostings (
   id INT auto_increment PRIMARY KEY,
   name VARCHAR(255),
   amount INT,
@@ -26,7 +28,7 @@ CREATE TABLE job_postings (
   deletedAt DATETIME
 );
 
-CREATE TABLE recruiter_fees (
+CREATE TABLE recruiterFees (
   id INT auto_increment PRIMARY KEY,
   discipline VARCHAR(255),
   percentage INT,
@@ -37,8 +39,10 @@ CREATE TABLE recruiter_fees (
   deletedAt DATETIME
 );
 
-CREATE TABLE employee ( /* SHOULD NAME BE ADDED? */
+CREATE TABLE calculatorEntries (
   id INT auto_increment PRIMARY KEY,
+  nameFirst VARCHAR(255),
+  nameLast VARCHAR(255),
   periodStart DATE,
   periodEnd DATE,
   occupationalSpecialty VARCHAR(255),

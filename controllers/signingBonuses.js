@@ -54,7 +54,7 @@ const patchSigningBonus = async (req, res) => {
     signingBonus.amount = amount
     await signingBonus.save()
 
-    return res.status(201).send(signingBonus)
+    return res.send(signingBonus)
   } catch (error) {
     return res.status(500).send('Unable to update recruiter fee, please try again')
   }

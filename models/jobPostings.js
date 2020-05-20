@@ -4,7 +4,7 @@ const jobPostings = (connection, Sequelize) => {
     service: { type: Sequelize.STRING },
     cost: { type: Sequelize.INTEGER },
     notes: { type: Sequelize.STRING },
-    slug: { type: Sequelize.STRING }
+    slug: { type: Sequelize.STRING },
   }, { paranoid: true })
 }
 

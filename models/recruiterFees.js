@@ -4,7 +4,7 @@ const recruiterFees = (connection, Sequelize) => {
     discipline: { type: Sequelize.STRING },
     percentage: { type: Sequelize.INTEGER },
     amount: { type: Sequelize.INTEGER },
-    salary: { type: Sequelize.INTEGER }
+    salary: { type: Sequelize.INTEGER },
   }, { paranoid: true })
 }
 
