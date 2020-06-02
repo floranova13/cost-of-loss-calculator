@@ -40,7 +40,6 @@ module.exports = {
     await queryInterface.createTable('recruiterFees', {
       id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
       discipline: { type: Sequelize.STRING },
-      percentage: { type: Sequelize.INTEGER },
       amount: { type: Sequelize.INTEGER },
       salary: { type: Sequelize.INTEGER },
       createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') },
