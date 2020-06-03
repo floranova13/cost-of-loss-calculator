@@ -1,8 +1,8 @@
-const models = require('../models')
+import models from '../models'
 
-const getAllSigningBonuses = async (req, res) => {
+export const getAllSigningBonuses = async (req, res) => {
   try {
-    let signingBonuses = await models.SigningBonus.findAll({ attributes: ['company', 'amount', 'slug'] })
+    const signingBonuses = await models.SigningBonus.findAll({ attributes: ['company', 'amount', 'slug'] })
 
     return res.send(signingBonuses)
   } catch (error) {
@@ -10,12 +10,12 @@ const getAllSigningBonuses = async (req, res) => {
   }
 }
 
-const getSigningBonusBySlug = async (req, res) => {
+export const getSigningBonusBySlug = async (req, res) => {
   try {
     const { slug } = req.params
     const signingBonus = await models.SigningBonus.findOne({
       where: { slug },
-      attributes: ['company', 'amount', 'slug']
+      attributes: ['company', 'amount', 'slug'],
     })
 
     return signingBonus
@@ -26,14 +26,14 @@ const getSigningBonusBySlug = async (req, res) => {
   }
 }
 
-const saveNewSigningBonus = async (req, res) => {
+export const saveNewSigningBonus = async (req, res) => {
   try {
     const {
-      company, amount, slug
+      company, amount, slug,
     } = req.body
 
     const signingBonus = await models.SigningBonus.create({
-      company, amount, slug
+      company, amount, slug,
     })
 
     return res.status(201).send(signingBonus)
@@ -42,13 +42,13 @@ const saveNewSigningBonus = async (req, res) => {
   }
 }
 
-const patchSigningBonus = async (req, res) => {
+export const patchSigningBonus = async (req, res) => {
   try {
     const { slug } = req.params // ADD MIDDLEWARE TO CHECK THIS
     const { amount } = req.body
     const signingBonus = await models.SigningBonus.findOne({
       where: { slug },
-      attributes: ['company', 'amount', 'slug']
+      attributes: ['company', 'amount', 'slug'],
     })
 
     signingBonus.amount = amount
@@ -59,5 +59,3 @@ const patchSigningBonus = async (req, res) => {
     return res.status(500).send('Unable to update recruiter fee, please try again')
   }
 }
-
-module.exports = { getAllSigningBonuses, getSigningBonusBySlug, saveNewSigningBonus, patchSigningBonus }

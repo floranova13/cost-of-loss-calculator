@@ -4,7 +4,7 @@ const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 const models = require('../../models')
 const {
-  after, afterEach, before, beforeEach, describe, it
+  after, afterEach, before, beforeEach, describe, it,
 } = require('mocha')
 const { singleJobPosting, jobPostingList, postedJobPosting } = require('../mocks/jobPostings')
 const {

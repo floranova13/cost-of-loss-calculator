@@ -1,9 +1,9 @@
-const models = require('../models')
+import models from '../models'
 
-const getAllRecruiterFees = async (req, res) => {
+export const getAllRecruiterFees = async (req, res) => {
   try {
-    let recruitFees = await models.RecruiterFee.findAll({
-      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary']
+    const recruitFees = await models.RecruiterFee.findAll({
+      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary'],
     })
 
     return res.send(recruitFees)
@@ -12,12 +12,12 @@ const getAllRecruiterFees = async (req, res) => {
   }
 }
 
-const getRecruiterFeeById = async (req, res) => {
+export const getRecruiterFeeById = async (req, res) => {
   try {
     const { id } = req.params
     const recruitFee = await models.RecruiterFee.findOne({
       where: { id },
-      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary'] // should the percentage be displayed as an integer or with a decimal?
+      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary'], // should the percentage be displayed as an integer or with a decimal?
     })
 
     return recruitFee
@@ -28,14 +28,14 @@ const getRecruiterFeeById = async (req, res) => {
   }
 }
 
-const saveNewRecruiterFee = async (req, res) => {
+export const saveNewRecruiterFee = async (req, res) => {
   try {
     const {
-      discipline, percentage, amount, salary // currently, percentage is entered in as a decimal and converted to an integer. Not sure of the best way to display it as a percentage, though.
+      discipline, percentage, amount, salary, // currently, percentage is entered in as a decimal and converted to an integer. Not sure of the best way to display it as a percentage, though.
     } = req.body
 
     const recruiterFee = await models.RecruiterFee.create({
-      discipline, percentage: percentage * 100, amount, salary
+      discipline, percentage: percentage * 100, amount, salary,
     })
 
     return res.status(201).send(recruiterFee)
@@ -44,13 +44,13 @@ const saveNewRecruiterFee = async (req, res) => {
   }
 }
 
-const patchRecruiterFee = async (req, res) => {
+export const patchRecruiterFee = async (req, res) => {
   try {
     const { id } = req.params // ADD MIDDLEWARE TO CHECK THIS
     const { percentage, amount, salary } = req.body
     const recruiterFee = await models.RecruiterFee.findOne({
       where: { id },
-      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary']
+      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary'],
     })
 
     recruiterFee.percentage = percentage * 100
@@ -63,5 +63,3 @@ const patchRecruiterFee = async (req, res) => {
     return res.status(500).send('Unable to update recruiter fee, please try again')
   }
 }
-
-module.exports = { getAllRecruiterFees, getRecruiterFeeById, saveNewRecruiterFee, patchRecruiterFee }

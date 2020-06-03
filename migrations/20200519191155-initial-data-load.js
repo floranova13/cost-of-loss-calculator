@@ -25,5 +25,5 @@ module.exports = {
     await queryInterface.bulkDelete('recruiterFees')
 
     return queryInterface.bulkDelete('calculatorEntries')
-  }
+  },
 }
