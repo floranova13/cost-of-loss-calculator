@@ -8,5 +8,4 @@ export default (connection, Sequelize) => connection.define('jobPostings', {
     },
   },
   notes: { type: Sequelize.STRING },
-  slug: { type: Sequelize.STRING },
 }, { paranoid: true })

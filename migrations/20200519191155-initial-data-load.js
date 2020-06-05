@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface) => {
-    await queryInterface.bulkInsert('calculatorEntries', [
+    await queryInterface.bulkInsert('userInputs', [
 
     ])
 
@@ -15,15 +15,21 @@ module.exports = {
     await queryInterface.bulkInsert('signingBonuses', [
 
     ])
+
+    await queryInterface.bulkInsert('salaries', [
+
+    ])
   },
 
   down: async (queryInterface) => {
+    await queryInterface.bulkDelete('salaries')
+
     await queryInterface.bulkDelete('signingBonuses')
 
     await queryInterface.bulkDelete('jobPostings')
 
     await queryInterface.bulkDelete('recruiterFees')
 
-    return queryInterface.bulkDelete('calculatorEntries')
+    return queryInterface.bulkDelete('userInputs')
   },
 }

@@ -1,7 +1,7 @@
 export default (connection, Sequelize) => connection.define('recruiterFees', {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   discipline: { type: Sequelize.STRING },
-  amount: {
+  fee: {
     type: Sequelize.INTEGER,
     set(value) {
       return this.setDataValue(value * 100)
@@ -16,7 +16,7 @@ export default (connection, Sequelize) => connection.define('recruiterFees', {
   percent: {
     type: Sequelize.VIRTUAL,
     get() {
-      return `${Math.ceil((this.amount / this.salary) * 100)}%`
+      return `${Math.ceil((this.fee / this.salary) * 100)}%`
     },
   },
 }, { paranoid: true })

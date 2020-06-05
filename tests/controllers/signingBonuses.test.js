@@ -2,13 +2,13 @@
 const chai = require('chai')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
-const models = require('../../models')
 const {
-  after, afterEach, before, beforeEach, describe, it
+  after, afterEach, before, beforeEach, describe, it,
 } = require('mocha')
+const models = require('../../models')
 const { singleSigningBonus, signingBonusList, postedSigningBonus } = require('../mocks/signingBonuses')
 const {
-  getAllSigningBonuses, getSigningBonusBySlug, saveNewSigningBonus, replaceSigningBonus, patchSigningBonusCost, patchSigningBonusNotes, deleteSigningBonus
+  getAllSigningBonuses, getSigningBonusBySlug, saveNewSigningBonus, replaceSigningBonus, patchSigningBonusCost, patchSigningBonusNotes, deleteSigningBonus,
 } = require('../../controllers/signingBonuses')
 
 chai.use(sinonChai)
@@ -171,12 +171,12 @@ describe('Controllers - SigningBonuses', () => {
     it('returns a 500 status and sends a message when an error occurs replacing the referenced signing bonus', async () => {
       const request = { params: { slug: '' }, body: { } }
 
-      stubbedUpdate.returns(Promise.reject('Failed Update'))
+      stubbedUpdate.returns(Promise.reject(new Error('ERROR')))
 
       await replaceSigningBonus(request, response)
 
       expect(stubbedUpdate).to.have.been.calledWith({
-        service: undefined, cost: undefined, notes: undefined, slug: undefined
+        service: undefined, cost: undefined, notes: undefined, slug: undefined,
       }, { where: { slug: '' } })
       expect(stubbedStatus).to.have.been.calledWith(500)
       expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to replace signing bonus, please try again')
@@ -234,7 +234,7 @@ describe('Controllers - SigningBonuses', () => {
   })
 
   describe('deleteSigningBonus', () => {
-    it('Deletes a signing bonus referenced by slug in the route from the database and calls sendStatus(204)', async () => {
+    it('Deletes a signing bonus referenced by slug in the route from the database and calls sendStatus(200)', async () => {
       const request = { params: { slug: 'glassdoor' } }
 
       stubbedDestroy.returns(1)
@@ -242,7 +242,7 @@ describe('Controllers - SigningBonuses', () => {
       await deleteSigningBonus(request, response)
 
       expect(stubbedDestroy).to.have.been.calledWith({ where: { slug: 'glassdoor' } })
-      expect(stubbedSendStatus).to.have.been.calledWith(204)
+      expect(stubbedSendStatus).to.have.been.calledWith(200)
     })
 
 

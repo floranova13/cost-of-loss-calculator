@@ -1,14 +1,14 @@
-export default (connection, Sequelize) => connection.define('calculatorEntries', {
+export default (connection, Sequelize) => connection.define('userInputs', {
   id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
   nameFirst: { type: Sequelize.STRING },
   nameLast: { type: Sequelize.STRING },
   periodStart: { type: Sequelize.DATEONLY },
   periodEnd: { type: Sequelize.DATEONLY },
+  companyIndustry: { type: Sequelize.STRING },
   occupationalSpecialty: { type: Sequelize.STRING },
   jobTitle: { type: Sequelize.STRING },
   laborCode: { type: Sequelize.INTEGER },
   annualSalary: { type: Sequelize.INTEGER },
-  hourlySalary: { type: Sequelize.INTEGER },
   degree: { type: Sequelize.STRING },
   externalCorporateRecruiter: { type: Sequelize.BOOLEAN },
   signOnBonus: { type: Sequelize.BOOLEAN },

@@ -1,11 +1,12 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('calculatorEntries', {
+    await queryInterface.createTable('userInputs', {
       id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
       nameFirst: { type: Sequelize.STRING },
       nameLast: { type: Sequelize.STRING },
       periodStart: { type: Sequelize.DATEONLY },
       periodEnd: { type: Sequelize.DATEONLY },
+      companyIndustry: { type: Sequelize.STRING },
       occupationalSpecialty: { type: Sequelize.STRING },
       jobTitle: { type: Sequelize.STRING },
       laborCode: { type: Sequelize.INTEGER },
@@ -28,7 +29,6 @@ module.exports = {
       service: { type: Sequelize.STRING },
       cost: { type: Sequelize.INTEGER },
       notes: { type: Sequelize.STRING },
-      slug: { type: Sequelize.STRING },
       createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') },
       updatedAt: {
         type: Sequelize.DATE,
@@ -40,7 +40,7 @@ module.exports = {
     await queryInterface.createTable('recruiterFees', {
       id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
       discipline: { type: Sequelize.STRING },
-      amount: { type: Sequelize.INTEGER },
+      fee: { type: Sequelize.INTEGER },
       salary: { type: Sequelize.INTEGER },
       createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') },
       updatedAt: {
@@ -54,7 +54,6 @@ module.exports = {
       id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
       company: { type: Sequelize.STRING },
       amount: { type: Sequelize.INTEGER },
-      slug: { type: Sequelize.STRING },
       createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') },
       updatedAt: {
         type: Sequelize.DATE,
@@ -71,6 +70,6 @@ module.exports = {
 
     await queryInterface.dropTable('jobPostings')
 
-    return queryInterface.dropTable('calculatorEntries')
+    return queryInterface.dropTable('userInputs')
   },
 }
