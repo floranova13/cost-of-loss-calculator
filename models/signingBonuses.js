@@ -3,9 +3,11 @@ export default (connection, Sequelize) => connection.define('signingBonuses', {
   company: { type: Sequelize.STRING },
   amount: {
     type: Sequelize.INTEGER,
+    get() {
+      return this.getDataValue('amount') / 100
+    },
     set(value) {
-      return this.setDataValue(value * 100)
+      this.setDataValue('amount', value * 100)
     },
   },
-  slug: { type: Sequelize.STRING },
 }, { paranoid: true })

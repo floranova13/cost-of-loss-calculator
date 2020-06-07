@@ -8,7 +8,24 @@ export default (connection, Sequelize) => connection.define('userInputs', {
   occupationalSpecialty: { type: Sequelize.STRING },
   jobTitle: { type: Sequelize.STRING },
   laborCode: { type: Sequelize.INTEGER },
-  annualSalary: { type: Sequelize.INTEGER },
+  annualSalary: {
+    type: Sequelize.INTEGER,
+    get() {
+      return this.getDataValue('annualSalary') / 100
+    },
+    set(value) {
+      this.setDataValue('annualSalary', value * 100)
+    },
+  },
+  hourlySalary: {
+    type: Sequelize.INTEGER,
+    get() {
+      return this.getDataValue('hourlySalary') / 100
+    },
+    set(value) {
+      this.setDataValue('hourlySalary', value * 100)
+    },
+  },
   degree: { type: Sequelize.STRING },
   externalCorporateRecruiter: { type: Sequelize.BOOLEAN },
   signOnBonus: { type: Sequelize.BOOLEAN },

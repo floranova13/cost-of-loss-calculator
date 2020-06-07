@@ -3,8 +3,11 @@ export default (connection, Sequelize) => connection.define('jobPostings', {
   service: { type: Sequelize.STRING },
   cost: {
     type: Sequelize.INTEGER,
+    get() {
+      return this.getDataValue('cost') / 100
+    },
     set(value) {
-      return this.setDataValue(value * 100)
+      this.setDataValue('cost', value * 100)
     },
   },
   notes: { type: Sequelize.STRING },

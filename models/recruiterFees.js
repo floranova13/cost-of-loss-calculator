@@ -3,14 +3,20 @@ export default (connection, Sequelize) => connection.define('recruiterFees', {
   discipline: { type: Sequelize.STRING },
   fee: {
     type: Sequelize.INTEGER,
+    get() {
+      return this.getDataValue('fee') / 100
+    },
     set(value) {
-      return this.setDataValue(value * 100)
+      this.setDataValue('fee', value * 100)
     },
   },
   salary: {
     type: Sequelize.INTEGER,
+    get() {
+      return this.getDataValue('salary') / 100
+    },
     set(value) {
-      return this.setDataValue(value * 100)
+      return this.setDataValue('salary', value * 100)
     },
   },
   percent: {

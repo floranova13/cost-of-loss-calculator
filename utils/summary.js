@@ -1,4 +1,4 @@
-const exitlabels = [
+export const exitlabels = [
   'Seperation Pay', 'Personnel Expenses', 'Prospective Costs', 'Productivity Losses',
 ]
 
@@ -16,14 +16,14 @@ const exitHidden = {
   productivityLosses: 0,
 }
 
-const exitTotal = {
+export const exitTotal = {
   seperationPay: () => exitDirect.seperationPay + exitHidden.seperationPay,
   personnelExpenses: () => exitDirect.personnelExpenses + exitHidden.personnelExpenses,
   prospectiveCosts: () => exitDirect.prospectiveCosts + exitHidden.prospectiveCosts,
   productivityLosses: () => exitDirect.productivityLosses + exitHidden.productivityLosses,
 }
 
-const recruitmentAndHiringlabels = [
+export const recruitmentAndHiringlabels = [
   'Personnel Expenses', 'Advertising', 'Sign-On Bonuses/Relocation', 'Productivity Losses',
 ]
 
@@ -41,7 +41,7 @@ const recruitmentAndHiringHidden = {
   productivityLosses: 0,
 }
 
-const recruitmentAndHiringTotal = {
+export const recruitmentAndHiringTotal = {
   personnelExpenses: () => recruitmentAndHiringDirect.personnelExpenses +
   recruitmentAndHiringHidden.personnelExpenses,
   advertising: () => recruitmentAndHiringDirect.advertising +
@@ -52,7 +52,7 @@ const recruitmentAndHiringTotal = {
   recruitmentAndHiringHidden.productivityLosses,
 }
 
-const onboardinglabels = [
+export const onboardinglabels = [
   'Personnel Expenses', 'Outside Training', 'Productivity Losses',
 ]
 
@@ -68,14 +68,14 @@ const onboardingHidden = {
   productivityLosses: 0,
 }
 
-const onboardingTotal = {
+export const onboardingTotal = {
   personnelExpenses: () => onboardingHidden.personnelExpenses,
   prospectiveCosts: () => onboardingHidden.prospectiveCosts,
   productivityLosses: () => onboardingDirect.productivityLosses + onboardingHidden.productivityLosses,
 }
 
 
-const snapshotMain = {
+export const snapshotMain = {
   exitDirect: () => exitDirect.seperationPay + exitDirect.personnelExpenses +
     exitDirect.prospectiveCosts + exitDirect.productivityLosses,
   exitHidden: () => exitHidden.seperationPay + exitHidden.personnelExpenses +
@@ -99,15 +99,15 @@ const snapshotMain = {
     onboardingTotal.outsideTraining() + onboardingTotal.productivityLosses(),
 }
 
-const snapshotTotal = {
+export const snapshotTotal = {
   directCost: () => snapshotMain.exitDirect() + snapshotMain.recruitmentAndHiringDirect() +
     snapshotTotal.onboardingDirect(),
   hiddenCost: () => snapshotMain.exitHidden() + snapshotMain.recruitmentAndHiringHidden() +
     snapshotTotal.onboardingHidden(),
 }
 
-const snapshotFullTotal = () => snapshotTotal.directCost() + snapshotTotal.hiddenCost()
+export const snapshotFullTotal = () => snapshotTotal.directCost() + snapshotTotal.hiddenCost()
 
-const programCost = 5710 * 12 + 1300
+export const programCost = 5710 * 12 + 1300
 
-const overallSavings = (snapshotFullTotal() - programCost)
+export const overallSavings = (snapshotFullTotal() - programCost)

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('userInputs', {
       id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
@@ -50,7 +50,7 @@ module.exports = {
       deletedAt: { type: Sequelize.DATE },
     })
 
-    return queryInterface.createTable('signingBonuses', {
+    await queryInterface.createTable('signingBonuses', {
       id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
       company: { type: Sequelize.STRING },
       amount: { type: Sequelize.INTEGER },
@@ -61,9 +61,24 @@ module.exports = {
       },
       deletedAt: { type: Sequelize.DATE },
     })
+
+    return queryInterface.createTable('salaries', {
+      id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+      title: { type: Sequelize.STRING },
+      totalSalary: { type: Sequelize.INTEGER },
+      benefitsPercent: { type: Sequelize.INTEGER },
+      createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') },
+      updatedAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+      },
+      deletedAt: { type: Sequelize.DATE },
+    })
   },
 
   down: async (queryInterface) => {
+    await queryInterface.dropTable('salaries')
+
     await queryInterface.dropTable('signingBonuses')
 
     await queryInterface.dropTable('recruiterFees')

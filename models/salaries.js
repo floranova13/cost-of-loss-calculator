@@ -3,14 +3,18 @@ export default (connection, Sequelize) => connection.define('salaries', {
   title: { type: Sequelize.STRING },
   totalSalary: {
     type: Sequelize.INTEGER,
+    get() {
+      return this.getDataValue('totalSalary') / 100
+    },
     set(value) {
-      return this.setDataValue(value * 100)
+      this.setDataValue('totalSalary', value * 100)
     },
   },
+  benefitsPercent: { type: Sequelize.INTEGER },
   totalBenefits: {
     type: Sequelize.VIRTUAL,
     get() {
-      return `${Math.round((this.totalSalary * this.salary) / 100) / 100}%`
+      return Math.round((this.getDataValue('totalSalary') * this.getDataValue('totalSalary')) / 100) / 100
     },
   },
 }, { paranoid: true })
