@@ -1,5 +1,14 @@
 import fetchSalaries from '../actions/salaries'
 
+const salaryKeys = [
+  { corporateRecruiter: 'Corporate Recruiter' },
+  { directorOfEngineering: 'Director of Engineering (Hiring Manager)' },
+  { itTechnician: 'IT Technician' },
+  { humanResourcesManager: 'Human Resources Manager' },
+  { executives: 'CEO, Executives/Decision-Maker' },
+  { peerWorker: 'Peer Worker (Estimated 3 people)' },
+]
+
 export const retrieveSalaries = async () => {
   const salaries = await fetchSalaries()
 
@@ -102,6 +111,10 @@ const recruitmentAndHiringHours = {
   },
 }
 
+const totalrecruitmentAndHiringHours = title => Object.values(recruitmentAndHiringHours).reduce(
+  (acc, curr) => acc + curr[title], 0,
+)
+
 export const onboardingLabels = [
   'Technical Training', 'Orientation',
 ]
@@ -134,7 +147,7 @@ const totalHours = {
   peerWorker: 103,
 }
 
-// const calculateSalary
+// const overtimeHours = salaryKeys.keys.reduce((acc, curr) => acc + exitHours.vacencyOvertime[curr], 0) // WHY ISNT THIS USED?
 
 export const calculateCorporateRecruiterSalary = async () => {
   const salaries = await retrieveSalaries()
@@ -144,4 +157,26 @@ export const calculateCorporateRecruiterSalary = async () => {
   return Math.ciel(hourlyCost * 100) / 100
 }
 
-// const totalHours
+export const calculateOvertimeToCoverVacancy = async () => {
+  const salaries = await retrieveSalaries()
+
+  const cost = Object.entries(salaryKeys).reduce((acc, curr) => {
+    const salary = salaries.find(curr[1])
+
+    return acc + (salary.totalSalary * (1 + salary.benefitsPercent)) * exitHours.vacencyOvertime[curr[0]]
+  }, 0)
+
+  return Math.ciel(cost * 100) / 100
+}
+
+export const calculateRecruitmentAndHiringCost = async () => {
+  const salaries = await retrieveSalaries()
+
+  const cost = Object.entries(salaryKeys).reduce((acc, curr) => {
+    const salary = salaries.find(curr[1])
+
+    return acc + (salary.totalSalary * (1 + salary.benefitsPercent)) * totalrecruitmentAndHiringHours[curr[0]]
+  }, 0)
+
+  return Math.ciel(cost * 100) / 100
+}

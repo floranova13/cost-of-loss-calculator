@@ -2,13 +2,13 @@ import { retrieveJobPostings } from './jobPostings'
 import { retrieveSigningBonuses } from './signingBonuses'
 import { calculateCorporateRecruiterSalary } from './salaries'
 
-const calculateSeperationPay = annualSalary => Math.ceil((annualSalary / 26) * 100) / 100
+export const calculateSeperationPay = annualSalary => Math.ceil((annualSalary / 26) * 100) / 100
 
 export const calculateExitCost = (
   annualSalary, outsourcedWork = 0, unemploymentTaxIncrease = 0, possibleLegalClaims = 0,
 ) => calculateSeperationPay(annualSalary) + outsourcedWork + unemploymentTaxIncrease + possibleLegalClaims
 
-const calculateAdvertisingCosts = async () => {
+export const calculateAdvertisingCosts = async () => {
   const jobPostings = await retrieveJobPostings()
 
   return jobPostings.reduce((acc, curr) => acc + curr.cost, 0)
@@ -22,9 +22,9 @@ const calculateRecruiterFee = async (annualSalary, usingCorporateRecruiter) => {
   return cost
 }
 
-const calculateRelocationCost = offeringRelocationBonus => (offeringRelocationBonus ? 21000 : 0)
+export const calculateRelocationCost = offeringRelocationBonus => (offeringRelocationBonus ? 21000 : 0)
 
-const calculateSignOnBonuses = async (offeringSignOnBonus) => {
+export const calculateSignOnBonuses = async (offeringSignOnBonus) => {
   if (!offeringSignOnBonus) return 0
 
   const signOnBonuses = await retrieveSigningBonuses()
