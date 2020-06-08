@@ -94,37 +94,37 @@ describe('Controllers - RecruiterFees', () => {
   })
 
   describe('getRecruiterFeeBySlug', () => {
-    it('retrieves the recruiter fee associated with the provided slug from the database and calls response.send() with it', async () => {
-      const request = { params: { slug: 'glassdoor' } }
+    it('retrieves the recruiter fee associated with the provided id from the database and calls response.send() with it', async () => {
+      const request = { params: { id: '1' } }
 
       stubbedFindOne.returns(singleRecruiterFee)
 
       await getRecruiterFeeBySlug(request, response)
 
-      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'glassdoor' } })
+      expect(stubbedFindOne).to.have.been.calledWith({ where: { id: '1' } })
       expect(stubbedSend).to.have.been.calledWith(singleRecruiterFee)
     })
 
     it('returns a 404 status and sends a message when no recruiter fee is found', async () => {
-      const request = { params: { slug: 'glassdoor' } }
+      const request = { params: { id: '1' } }
 
       stubbedFindOne.returns(null)
 
       await getRecruiterFeeBySlug(request, response)
 
-      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'glassdoor' } })
+      expect(stubbedFindOne).to.have.been.calledWith({ where: { id: '1' } })
       expect(stubbedStatus).to.have.been.calledWith(404)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('No recruiter fee found with a slug of "glassdoor"')
+      expect(stubbedStatusDotSend).to.have.been.calledWith('No recruiter fee found with a id of "glassdoor"')
     })
 
-    it('returns a 500 status and sends a message when an error occurs retrieving the recruiter fee by slug', async () => {
-      const request = { params: { slug: 'glassdoor' } }
+    it('returns a 500 status and sends a message when an error occurs retrieving the recruiter fee by id', async () => {
+      const request = { params: { id: '1' } }
 
       stubbedFindOne.throws('ERROR!')
 
       await getRecruiterFeeBySlug(request, response)
 
-      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'glassdoor' } })
+      expect(stubbedFindOne).to.have.been.calledWith({ where: { id: '1' } })
       expect(stubbedStatus).to.have.been.calledWith(500)
       expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to retrieve recruiter fee, please try again')
     })
@@ -157,115 +157,115 @@ describe('Controllers - RecruiterFees', () => {
   })
 
   describe('replaceRecruiterFee', () => {
-    it('accepts new recruiter fee details and replaces the recruiter fee referenced by slug in the route with the new one in the database, returning the new recruiter fee', async () => {
-      const request = { params: { slug: 'glassdoor' }, body: postedRecruiterFee }
+    it('accepts new recruiter fee details and replaces the recruiter fee referenced by id in the route with the new one in the database, returning the new recruiter fee', async () => {
+      const request = { params: { id: '1' }, body: postedRecruiterFee }
 
       stubbedUpdate.returns(postedRecruiterFee)
 
       await replaceRecruiterFee(request, response)
 
-      expect(stubbedUpdate).to.have.been.calledWith(postedRecruiterFee, { where: { slug: 'glassdoor' } })
+      expect(stubbedUpdate).to.have.been.calledWith(postedRecruiterFee, { where: { id: '1' } })
       expect(stubbedSend).to.have.been.calledWith(postedRecruiterFee)
     })
 
     it('returns a 500 status and sends a message when an error occurs replacing the referenced recruiter fee', async () => {
-      const request = { params: { slug: '' }, body: {} }
+      const request = { params: { id: '1' }, body: {} }
 
-      stubbedUpdate.returns(Promise.reject('Failed Update'))
+      stubbedUpdate.returns(Promise.reject(new Error('ERROR!')))
 
       await replaceRecruiterFee(request, response)
 
       expect(stubbedUpdate).to.have.been.calledWith({
-        service: undefined, cost: undefined, notes: undefined, slug: undefined
-      }, { where: { slug: '' } })
+        id: undefined, discipline: undefined, fee: undefined, salary: undefined,
+      }, { where: { id: '1' } })
       expect(stubbedStatus).to.have.been.calledWith(500)
       expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to replace recruiter fee, please try again')
     })
   })
 
-  describe('patchRecruiterFeeCost', () => {
-    it('accepts a new recruiter fee cost and assigns it to the recruiter fee referenced by slug in the route, returning the patched recruiter fee', async () => {
-      const request = { params: { slug: 'glassdoor' }, body: { cost: 0 } }
+  describe('patchRecruiterFeeFee', () => {
+    it('accepts a new recruiter fee fee and assigns it to the recruiter fee referenced by id in the route, returning the patched recruiter fee', async () => {
+      const request = { params: { id: '1' }, body: { fee: 0 } }
 
       stubbedUpdate.returns(postedRecruiterFee)
 
-      await patchRecruiterFeeCost(request, response)
+      await patchRecruiterFeeFee(request, response)
 
-      expect(stubbedUpdate).to.have.been.calledWith({ cost: 0 }, { where: { slug: 'glassdoor' } })
-      expect(stubbedSend).to.have.been.calledWith({ ...postedRecruiterFee, cost: 0 })
+      expect(stubbedUpdate).to.have.been.calledWith({ cost: 0 }, { where: { id: '1' } })
+      expect(stubbedSend).to.have.been.calledWith({ ...postedRecruiterFee, fee: 0 })
     })
 
-    it('returns a 500 status and sends a message when an error occurs patching the recruiter fee cost', async () => {
-      const request = { params: { slug: '' }, body: {} }
+    it('returns a 500 status and sends a message when an error occurs patching the recruiter fee fee', async () => {
+      const request = { params: { id: '1' }, body: {} }
 
-      stubbedUpdate.returns(Promise.reject('Failed Update'))
+      stubbedUpdate.returns(Promise.reject(new Error('ERROR!')))
 
-      await patchRecruiterFeeCost(request, response)
+      await patchRecruiterFeeFee(request, response)
 
-      expect(stubbedUpdate).to.have.been.calledWith({ cost: undefined }, { where: { slug: '' } })
+      expect(stubbedUpdate).to.have.been.calledWith({ fee: undefined }, { where: { id: '1' } })
       expect(stubbedStatus).to.have.been.calledWith(500)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to patch recruiter fee cost, please try again')
+      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to patch recruiter fee fee, please try again')
     })
   })
 
-  describe('patchRecruiterFeeNotes', () => {
-    it('accepts a new recruiter fee notes value and assigns it to the recruiter fee referenced by slug in the route, returning the patched recruiter fee', async () => {
-      const request = { params: { slug: 'glassdoor' }, body: { notes: '' } }
+  describe('patchRecruiterFeeSalary', () => {
+    it('accepts a new recruiter fee salary value and assigns it to the recruiter fee referenced by id in the route, returning the patched recruiter fee', async () => {
+      const request = { params: { id: '1' }, body: { notes: '' } }
 
       stubbedUpdate.returns(postedRecruiterFee)
 
-      await patchRecruiterFeeNotes(request, response)
+      await patchRecruiterFeeSalary(request, response)
 
-      expect(stubbedUpdate).to.have.been.calledWith({ notes: '' }, { where: { slug: 'glassdoor' } })
-      expect(stubbedSend).to.have.been.calledWith({ ...postedRecruiterFee, notes: '' })
+      expect(stubbedUpdate).to.have.been.calledWith({ salary: '' }, { where: { id: '1' } })
+      expect(stubbedSend).to.have.been.calledWith({ ...postedRecruiterFee, salary: '' })
     })
 
-    it('returns a 500 status and sends a message when an error occurs patching the recruiter fee notes', async () => {
-      const request = { params: { slug: '' }, body: {} }
+    it('returns a 500 status and sends a message when an error occurs patching the recruiter fee salary', async () => {
+      const request = { params: { id: '1' }, body: {} }
 
-      stubbedUpdate.returns(Promise.reject('Failed Update'))
+      stubbedUpdate.returns(Promise.reject(new Error('ERROR!')))
 
-      await patchRecruiterFeeNotes(request, response)
+      await patchRecruiterFeeSalary(request, response)
 
-      expect(stubbedUpdate).to.have.been.calledWith({ notes: undefined }, { where: { slug: '' } })
+      expect(stubbedUpdate).to.have.been.calledWith({ salary: undefined }, { where: { id: '1' } })
       expect(stubbedStatus).to.have.been.calledWith(500)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to patch recruiter fee notes, please try again')
+      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to patch recruiter fee salary, please try again')
     })
   })
 
   describe('deleteRecruiterFee', () => {
-    it('Deletes a recruiter fee referenced by slug in the route from the database and calls sendStatus(204)', async () => {
-      const request = { params: { slug: 'glassdoor' } }
+    it('Deletes a recruiter fee referenced by id in the route from the database and calls sendStatus(200)', async () => {
+      const request = { params: { id: '1' } }
 
       stubbedDestroy.returns(1)
 
       await deleteRecruiterFee(request, response)
 
-      expect(stubbedDestroy).to.have.been.calledWith({ where: { slug: 'glassdoor' } })
-      expect(stubbedSendStatus).to.have.been.calledWith(204)
+      expect(stubbedDestroy).to.have.been.calledWith({ where: { id: '1' } })
+      expect(stubbedSendStatus).to.have.been.calledWith(200)
     })
 
 
-    it('returns a 404 status and sends a message when no recruiter fee is found with the slug in the route', async () => {
-      const request = { params: { slug: '' } }
+    it('returns a 404 status and sends a message when no recruiter fee is found with the id in the route', async () => {
+      const request = { params: { id: '1' } }
 
       stubbedDestroy.returns(0)
 
       await deleteRecruiterFee(request, response)
 
-      expect(stubbedDestroy).to.have.been.calledWith({ where: { slug: '' } })
+      expect(stubbedDestroy).to.have.been.calledWith({ where: { id: '1' } })
       expect(stubbedStatus).to.have.been.calledWith(404)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('No recruiter fee found with a slug of ""')
+      expect(stubbedStatusDotSend).to.have.been.calledWith('No recruiter fee found with a id of ""')
     })
 
     it('returns a 500 status when an error occurs deleting the recruiter fee', async () => {
-      const request = { params: { slug: 'glassdoor' } }
+      const request = { params: { id: '1' } }
 
       stubbedDestroy.throws('ERROR!')
 
       await deleteRecruiterFee(request, response)
 
-      expect(stubbedDestroy).to.have.been.calledWith({ where: { slug: 'glassdoor' } })
+      expect(stubbedDestroy).to.have.been.calledWith({ where: { id: '1' } })
       expect(stubbedStatus).to.have.been.calledWith(500)
       expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to delete recruiter fee, please try again')
     })
