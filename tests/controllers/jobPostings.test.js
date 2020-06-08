@@ -169,7 +169,7 @@ describe('Controllers - JobPostings', () => {
     })
 
     it('returns a 500 status and sends a message when an error occurs replacing the referenced job posting', async () => {
-      const request = { params: { slug: '' }, body: { } }
+      const request = { params: { slug: '' }, body: {} }
 
       stubbedUpdate.returns(Promise.reject('Failed Update'))
 
@@ -196,7 +196,7 @@ describe('Controllers - JobPostings', () => {
     })
 
     it('returns a 500 status and sends a message when an error occurs patching the job posting cost', async () => {
-      const request = { params: { slug: '' }, body: { } }
+      const request = { params: { slug: '' }, body: {} }
 
       stubbedUpdate.returns(Promise.reject('Failed Update'))
 
@@ -221,7 +221,7 @@ describe('Controllers - JobPostings', () => {
     })
 
     it('returns a 500 status and sends a message when an error occurs patching the job posting notes', async () => {
-      const request = { params: { slug: '' }, body: { } }
+      const request = { params: { slug: '' }, body: {} }
 
       stubbedUpdate.returns(Promise.reject('Failed Update'))
 

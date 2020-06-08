@@ -2,4 +2,4 @@ const signingBonuses = require('../controllers/signingBonuses')
 
 
 
-module.exports = { }
+module.exports = { signingBonuses }

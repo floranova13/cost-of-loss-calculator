@@ -169,7 +169,7 @@ describe('Controllers - SigningBonuses', () => {
     })
 
     it('returns a 500 status and sends a message when an error occurs replacing the referenced signing bonus', async () => {
-      const request = { params: { slug: '' }, body: { } }
+      const request = { params: { slug: '' }, body: {} }
 
       stubbedUpdate.returns(Promise.reject('Failed Update'))
 
@@ -196,7 +196,7 @@ describe('Controllers - SigningBonuses', () => {
     })
 
     it('returns a 500 status and sends a message when an error occurs patching the signing bonus cost', async () => {
-      const request = { params: { slug: '' }, body: { } }
+      const request = { params: { slug: '' }, body: {} }
 
       stubbedUpdate.returns(Promise.reject('Failed Update'))
 
@@ -221,7 +221,7 @@ describe('Controllers - SigningBonuses', () => {
     })
 
     it('returns a 500 status and sends a message when an error occurs patching the signing bonus notes', async () => {
-      const request = { params: { slug: '' }, body: { } }
+      const request = { params: { slug: '' }, body: {} }
 
       stubbedUpdate.returns(Promise.reject('Failed Update'))
 

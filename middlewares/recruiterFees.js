@@ -1,3 +1,3 @@
 const recruiterFees = require('../controllers/recruiterFees')
 
-module.exports = { }
+module.exports = { recruiterFees }

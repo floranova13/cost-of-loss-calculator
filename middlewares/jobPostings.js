@@ -1,3 +1,3 @@
 const jobPostings = require('../controllers/jobPostings')
 
-module.exports = { }
+module.exports = { jobPostings }
