@@ -2,9 +2,7 @@ import models from '../models'
 
 export const getAllRecruiterFees = async (req, res) => {
   try {
-    const recruitFees = await models.RecruiterFee.findAll({
-      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary'],
-    })
+    const recruitFees = await models.RecruiterFees.findAll()
 
     return res.send(recruitFees)
   } catch (error) {
@@ -15,14 +13,11 @@ export const getAllRecruiterFees = async (req, res) => {
 export const getRecruiterFeeById = async (req, res) => {
   try {
     const { id } = req.params
-    const recruitFee = await models.RecruiterFee.findOne({
-      where: { id },
-      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary'], // should the percentage be displayed as an integer or with a decimal?
-    })
+    const recruitFee = await models.RecruiterFees.findOne({ where: { id } })
 
     return recruitFee
       ? res.send(recruitFee)
-      : res.status(404).send(`no recruiter fee with the id of '${id}' found`)
+      : res.status(404).send(`No recruiter fee with the id of "${id}" found`)
   } catch (error) {
     return res.status(500).send('Unable to retrieve recruiter fee, please try again')
   }
@@ -30,36 +25,49 @@ export const getRecruiterFeeById = async (req, res) => {
 
 export const saveNewRecruiterFee = async (req, res) => {
   try {
-    const {
-      discipline, percentage, amount, salary, // currently, percentage is entered in as a decimal and converted to an integer. Not sure of the best way to display it as a percentage, though.
-    } = req.body
+    const { discipline, fee, salary } = req.body
 
-    const recruiterFee = await models.RecruiterFee.create({
-      discipline, percentage: percentage * 100, amount, salary,
-    })
+    await models.RecruiterFees.create({ discipline, fee, salary })
 
-    return res.status(201).send(recruiterFee)
+    return res.status(201).send({ discipline, fee, salary })
   } catch (error) {
     return res.status(500).send('Unable to save recruiter fee, please try again')
   }
 }
 
-export const patchRecruiterFee = async (req, res) => {
+export const patchRecruiterFeeFee = async (req, res) => {
   try {
-    const { id } = req.params // ADD MIDDLEWARE TO CHECK THIS
-    const { percentage, amount, salary } = req.body
-    const recruiterFee = await models.RecruiterFee.findOne({
-      where: { id },
-      attributes: ['id', 'discipline', 'percentage', 'amount', 'salary'],
-    })
+    const { id } = req.params
+    const { fee } = req.body
+    await models.RecruiterFees.update({ fee }, { where: { id } })
 
-    recruiterFee.percentage = percentage * 100
-    recruiterFee.amount = amount
-    recruiterFee.salary = salary
-    await recruiterFee.save()
-
-    return res.status(201).send(recruiterFee)
+    return res.sendStatus(200)
   } catch (error) {
-    return res.status(500).send('Unable to update recruiter fee, please try again')
+    return res.status(500).send('Unable to patch recruiter fee fee, please try again')
+  }
+}
+
+export const patchRecruiterFeeSalary = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { salary } = req.body
+    await models.RecruiterFees.update({ salary }, { where: { id } })
+
+    return res.sendStatus(200)
+  } catch (error) {
+    return res.status(500).send('Unable to patch recruiter fee salary, please try again')
+  }
+}
+
+export const deleteRecruiterFee = async (req, res) => {
+  try {
+    const { id } = req.params
+    const success = await models.RecruiterFees.destroy({ where: { id } })
+
+    return success
+      ? res.sendStatus(200)
+      : res.status(404).send('No recruiter fee with that id to delete')
+  } catch (error) {
+    return res.status(500).send('Unable to delete recruiter fee, please try again')
   }
 }

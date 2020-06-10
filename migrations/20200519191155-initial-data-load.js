@@ -1,9 +1,5 @@
-export default {
+module.exports = {
   up: async (queryInterface) => {
-    await queryInterface.bulkInsert('userInputs', [
-
-    ])
-
     await queryInterface.bulkInsert('jobPostings', [
       { service: 'Glassdoor', cost: 49800, notes: 'Based on 1 premium job slot open for 60-days' },
       { service: 'Monster', cost: 39900, notes: '1 post for 60-days (at 1 posting for 60-days)' },

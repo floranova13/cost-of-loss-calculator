@@ -1,19 +1,17 @@
 /* eslint-disable max-len */
-const chai = require('chai')
-const sinon = require('sinon')
-const sinonChai = require('sinon-chai')
-const models = require('../../models')
-const {
-  after, afterEach, before, beforeEach, describe, it
-} = require('mocha')
-const { singleRecruiterFee, recruiterFeeList, postedRecruiterFee } = require('../mocks/recruiterFees')
-const {
-  getAllRecruiterFees, getRecruiterFeeBySlug, saveNewRecruiterFee, replaceRecruiterFee, patchRecruiterFeeCost, patchRecruiterFeeNotes, deleteRecruiterFee
-} = require('../../controllers/recruiterFees')
+import chai, { expect } from 'chai'
+import sinon from 'sinon'
+import sinonChai from 'sinon-chai'
+import {
+  after, afterEach, before, beforeEach, describe, it,
+} from 'mocha'
+import models from '../../models'
+import { singleRecruiterFee, recruiterFeeList, postedRecruiterFee } from '../mocks/recruiterFees'
+import {
+  getAllRecruiterFees, getRecruiterFeeById, saveNewRecruiterFee, patchRecruiterFeeFee, patchRecruiterFeeSalary, deleteRecruiterFee,
+} from '../../controllers/recruiterFees'
 
 chai.use(sinonChai)
-
-const { expect } = chai
 
 describe('Controllers - RecruiterFees', () => {
   let response
@@ -73,48 +71,38 @@ describe('Controllers - RecruiterFees', () => {
       expect(stubbedSend).to.have.been.calledWith(recruiterFeeList)
     })
 
-    it('returns a 404 status and sends a message when the list of recruiter fees is empty', async () => {
-      stubbedFindAll.returns([])
-
-      await getAllRecruiterFees({}, response)
-
-      expect(stubbedFindAll).to.have.callCount(1)
-      expect(stubbedStatus).to.have.been.calledWith(404)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('No recruiter fees found')
-    })
-
     it('returns a 500 status and sends a message when an error occurs retrieving the recruiter fees', async () => {
       stubbedFindAll.throws('ERROR!')
 
       await getAllRecruiterFees({}, response)
 
       expect(stubbedStatus).to.have.been.calledWith(500)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to retrieve recruiter fees list, please try again')
+      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to retrieve recruiter fee list, please try again')
     })
   })
 
-  describe('getRecruiterFeeBySlug', () => {
+  describe('getRecruiterFeeById', () => {
     it('retrieves the recruiter fee associated with the provided id from the database and calls response.send() with it', async () => {
       const request = { params: { id: '1' } }
 
       stubbedFindOne.returns(singleRecruiterFee)
 
-      await getRecruiterFeeBySlug(request, response)
+      await getRecruiterFeeById(request, response)
 
       expect(stubbedFindOne).to.have.been.calledWith({ where: { id: '1' } })
       expect(stubbedSend).to.have.been.calledWith(singleRecruiterFee)
     })
 
     it('returns a 404 status and sends a message when no recruiter fee is found', async () => {
-      const request = { params: { id: '1' } }
+      const request = { params: { id: -1 } }
 
       stubbedFindOne.returns(null)
 
-      await getRecruiterFeeBySlug(request, response)
+      await getRecruiterFeeById(request, response)
 
-      expect(stubbedFindOne).to.have.been.calledWith({ where: { id: '1' } })
+      expect(stubbedFindOne).to.have.been.calledWith({ where: { id: -1 } })
       expect(stubbedStatus).to.have.been.calledWith(404)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('No recruiter fee found with a id of "glassdoor"')
+      expect(stubbedStatusDotSend).to.have.been.calledWith('No recruiter fee with the id of "-1" found')
     })
 
     it('returns a 500 status and sends a message when an error occurs retrieving the recruiter fee by id', async () => {
@@ -122,7 +110,7 @@ describe('Controllers - RecruiterFees', () => {
 
       stubbedFindOne.throws('ERROR!')
 
-      await getRecruiterFeeBySlug(request, response)
+      await getRecruiterFeeById(request, response)
 
       expect(stubbedFindOne).to.have.been.calledWith({ where: { id: '1' } })
       expect(stubbedStatus).to.have.been.calledWith(500)
@@ -156,43 +144,14 @@ describe('Controllers - RecruiterFees', () => {
     })
   })
 
-  describe('replaceRecruiterFee', () => {
-    it('accepts new recruiter fee details and replaces the recruiter fee referenced by id in the route with the new one in the database, returning the new recruiter fee', async () => {
-      const request = { params: { id: '1' }, body: postedRecruiterFee }
-
-      stubbedUpdate.returns(postedRecruiterFee)
-
-      await replaceRecruiterFee(request, response)
-
-      expect(stubbedUpdate).to.have.been.calledWith(postedRecruiterFee, { where: { id: '1' } })
-      expect(stubbedSend).to.have.been.calledWith(postedRecruiterFee)
-    })
-
-    it('returns a 500 status and sends a message when an error occurs replacing the referenced recruiter fee', async () => {
-      const request = { params: { id: '1' }, body: { } }
-
-      stubbedUpdate.returns(Promise.reject(new Error('ERROR!')))
-
-      await replaceRecruiterFee(request, response)
-
-      expect(stubbedUpdate).to.have.been.calledWith({
-        id: undefined, discipline: undefined, fee: undefined, salary: undefined,
-      }, { where: { id: '1' } })
-      expect(stubbedStatus).to.have.been.calledWith(500)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to replace recruiter fee, please try again')
-    })
-  })
-
   describe('patchRecruiterFeeFee', () => {
     it('accepts a new recruiter fee fee and assigns it to the recruiter fee referenced by id in the route, returning the patched recruiter fee', async () => {
       const request = { params: { id: '1' }, body: { fee: 0 } }
 
-      stubbedUpdate.returns(postedRecruiterFee)
-
       await patchRecruiterFeeFee(request, response)
 
-      expect(stubbedUpdate).to.have.been.calledWith({ cost: 0 }, { where: { id: '1' } })
-      expect(stubbedSend).to.have.been.calledWith({ ...postedRecruiterFee, fee: 0 })
+      expect(stubbedUpdate).to.have.been.calledWith({ fee: 0 }, { where: { id: '1' } })
+      expect(stubbedSendStatus).to.have.been.calledWith(200)
     })
 
     it('returns a 500 status and sends a message when an error occurs patching the recruiter fee fee', async () => {
@@ -210,14 +169,12 @@ describe('Controllers - RecruiterFees', () => {
 
   describe('patchRecruiterFeeSalary', () => {
     it('accepts a new recruiter fee salary value and assigns it to the recruiter fee referenced by id in the route, returning the patched recruiter fee', async () => {
-      const request = { params: { id: '1' }, body: { notes: '' } }
-
-      stubbedUpdate.returns(postedRecruiterFee)
+      const request = { params: { id: '1' }, body: { salary: '' } }
 
       await patchRecruiterFeeSalary(request, response)
 
       expect(stubbedUpdate).to.have.been.calledWith({ salary: '' }, { where: { id: '1' } })
-      expect(stubbedSend).to.have.been.calledWith({ ...postedRecruiterFee, salary: '' })
+      expect(stubbedSendStatus).to.have.been.calledWith(200)
     })
 
     it('returns a 500 status and sends a message when an error occurs patching the recruiter fee salary', async () => {
@@ -255,7 +212,7 @@ describe('Controllers - RecruiterFees', () => {
 
       expect(stubbedDestroy).to.have.been.calledWith({ where: { id: '1' } })
       expect(stubbedStatus).to.have.been.calledWith(404)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('No recruiter fee found with a id of ""')
+      expect(stubbedStatusDotSend).to.have.been.calledWith('No recruiter fee with that id to delete')
     })
 
     it('returns a 500 status when an error occurs deleting the recruiter fee', async () => {

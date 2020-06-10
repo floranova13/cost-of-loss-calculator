@@ -1,9 +1,10 @@
-const singleSigningBonus = {
+export const singleSigningBonus = { company: 'Facebook', amount: 4570800 }
 
-}
-
-const signingBonusList = [
-
+export const signingBonusList = [
+  { company: 'Facebook', amount: 4570800 },
+  { company: 'Amazon', amount: 4134000 },
+  { company: 'Pinterest', amount: 3337600 },
+  { company: 'Dropbox', amount: 3283300 },
 ]
 
-module.exports = { singleSigningBonus, signingBonusList }
+export const postedSigningBonus = { company: 'Facebook', amount: 4570800 }
