@@ -7,6 +7,8 @@ render(
   <BrowserRouter>
     <Switch>
       <Route exact path='/' components={X} />
+      <Route exact path='/2' components={Xtwo} />
+      <Route path="*" component={ErrorPage} />
     </Switch>
   </BrowserRouter>
   document.getElementById('root'),
