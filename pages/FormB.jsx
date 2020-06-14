@@ -25,12 +25,15 @@ export default () => {
     localStorage.setItem('degree', degree)
   }, [annualSalary, hourlySalary, weeklyWorkHours, oesSecCode, degree])
 
+  // if (checkbox.checked) activeElement.value = Math.round(inactiveElement.value / 2080 * 100) / 100
+  // if (!checkbox.checked) activeElement.value = Math.round(inactiveElement.value * 2080 * 100) / 100
+
   return (
     <Page>
       <Title />
-      <NumberInput getter={annualSalary} setter={setAnnualSalary} name="DOL Annual Salary:" />
-      <NumberInput getter={hourlySalary} setter={setHourlySalary} name="DOL Hourly Salary:" />
-      <NumberInput getter={weeklyWorkHours} setter={setWeeklyWorkHours} name="Weekly Work Hours:" />
+      <NumberInput getter={annualSalary} setter={setAnnualSalary} name="DOL Annual Salary:" step="0.01" />
+      <NumberInput getter={hourlySalary} setter={setHourlySalary} name="DOL Hourly Salary:" step="0.01" />
+      <NumberInput getter={weeklyWorkHours} setter={setWeeklyWorkHours} name="Weekly Work Hours:" step="1" />
       <TextInput
         getter={oesSecCode}
         setter={setOesSecCode}

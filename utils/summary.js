@@ -6,23 +6,26 @@ export const exitlabels = [
   'Seperation Pay', 'Personnel Expenses', 'Prospective Costs', 'Productivity Losses',
 ]
 
-const exitDirect = {
+export const exitDirect = {
   seperationPay: annualSalary => Administrative.calculateSeperationPay(annualSalary),
   personnelExpenses: 0,
   prospectiveCosts: 0,
   productivityLosses: 0,
 }
 
-const exitHidden = {
+export const exitHidden = {
   seperationPay: 0,
   personnelExpenses: () => Salaries.calculateOvertimeToCoverVacancy(),
   prospectiveCosts: (
     unemploymentTaxIncrease = 0, possibleLegalClaims = 0,
   ) => unemploymentTaxIncrease + possibleLegalClaims,
-  productivityLosses: (
+  productivityLosses: async (
     annualSalary, moraleCost = 0, productionDelayCost = 0,
-  ) => Salaries.calculateOvertimeToCoverVacancy() +
-    Productivity.calculateExitCost(annualSalary, moraleCost, productionDelayCost),
+  ) => {
+    const overtime = await Salaries.calculateOvertimeToCoverVacancy()
+
+    return overtime + Productivity.calculateExitCost(annualSalary, moraleCost, productionDelayCost)
+  },
 }
 
 export const exitTotal = {
