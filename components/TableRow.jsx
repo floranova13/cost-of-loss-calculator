@@ -5,7 +5,7 @@ const Row = styled.tr`
   text-align: center;
 `
 
-export default (valOne, valTwo, valThree, valFour) => (
+export default ({ valOne, valTwo, valThree, valFour }) => (
   <Row>
     <td>{valOne}</td>
     <td>{valTwo}</td>

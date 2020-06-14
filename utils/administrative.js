@@ -14,7 +14,7 @@ export const calculateAdvertisingCosts = async () => {
   return jobPostings.reduce((acc, curr) => acc + curr.cost, 0)
 }
 
-const calculateRecruiterFee = async (annualSalary, usingCorporateRecruiter) => {
+export const calculateRecruiterFee = async (annualSalary, usingCorporateRecruiter) => {
   if (usingCorporateRecruiter) return Math.ceil(annualSalary * 25) / 100
 
   const cost = await calculateCorporateRecruiterSalary()

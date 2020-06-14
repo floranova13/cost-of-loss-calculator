@@ -12,7 +12,7 @@ import ErrorPage from './pages/Error'
 render(
   <BrowserRouter>
     <Switch>
-      <Route exact path="/main" component={MainPage} />
+      <Route exact path="/" component={MainPage} />
       <Route exact path="/formA" component={FormAPage} />
       <Route exact path="/formB" component={FormBPage} />
       <Route exact path="/formC" component={FormCPage} />

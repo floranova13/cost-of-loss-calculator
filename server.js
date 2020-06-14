@@ -4,12 +4,15 @@ import path from 'path'
 // import  from './middlewares/jobPostings'
 // import  from './middlewares/recruiterFees'
 // import  from './middlewares/signingBonuses'
-import { getAllJobPostings, getJobPostingBySlug, saveNewJobPosting } from './controllers/jobPostings'
 import {
-  getAllRecruiterFees, getRecruiterFeeById, saveNewRecruiterFee, patchRecruiterFee,
+  getAllJobPostings, getJobPostingById, saveNewJobPosting, patchJobPostingCost, patchJobPostingNotes, deleteJobPosting,
+} from './controllers/jobPostings'
+import {
+  getAllRecruiterFees, getRecruiterFeeById, saveNewRecruiterFee,
+  patchRecruiterFeeFee, patchRecruiterFeeSalary, deleteRecruiterFee,
 } from './controllers/recruiterFees'
 import {
-  getAllSigningBonuses, getSigningBonusBySlug, saveNewSigningBonus, patchSigningBonus,
+  getAllSigningBonuses, getSigningBonusById, saveNewSigningBonus, patchSigningBonusAmount, deleteSigningBonus,
 } from './controllers/signingBonuses'
 import {
   getAllSalaries, patchSalary,
@@ -19,27 +22,31 @@ const app = express()
 
 app.use(express.static('public'))
 
-app.get('/api/v1/documentation', (req, res) => res.render('index', {}))
+// app.get('/api/v1/documentation', (req, res) => res.render('index', {}))
 
 app.get('/api/v1/job-postings', getAllJobPostings)
 app.get('/api/v1/job-postings/:id', getJobPostingById)
-app.post('/api/v1/job-postings', saveNewJobPosting)
+app.post('/api/v1/job-postings', express.json(), saveNewJobPosting)
+app.patch('/api/v1/job-postings/cost/:id', express.json(), patchJobPostingCost)
+app.patch('/api/v1/job-postings/notes/:id', express.json(), patchJobPostingNotes)
+app.delete('/api/v1/job-postings/:id', deleteJobPosting)
 
 app.get('/api/v1/recruiter-fees', getAllRecruiterFees)
 app.get('/api/v1/recruiter-fees/:id', getRecruiterFeeById)
-app.post('/api/v1/recruiter-fees', saveNewRecruiterFee)
-app.patch('/api/v1/recruiter-fees/:id', patchRecruiterFee)
+app.post('/api/v1/recruiter-fees', express.json(), saveNewRecruiterFee)
+app.patch('/api/v1/recruiter-fees/fee/:id', express.json(), patchRecruiterFeeFee)
+app.patch('/api/v1/recruiter-fees/salary/:id', express.json(), patchRecruiterFeeSalary)
+app.delete('/api/v1/recruiter-fees/:id', deleteRecruiterFee)
 
 app.get('/api/v1/signing-bonuses', getAllSigningBonuses)
 app.get('/api/v1/signing-bonuses/:id', getSigningBonusById)
-app.post('/api/v1/signing-bonuses', saveNewSigningBonus)
-app.patch('/api/v1/signing-bonuses/:id', patchSigningBonus)
+app.post('/api/v1/signing-bonuses', express.json(), saveNewSigningBonus)
+app.patch('/api/v1/signing-bonuses/:id', express.json(), patchSigningBonusAmount)
+app.delete('/api/v1/signing-bonuses/:id', deleteSigningBonus)
 
-app.get('/api/v1/salaries', getAllSalaries)
-app.patch('/api/v1/salaries/:id', patchSalary)
+// app.get('/api/v1/salaries', getAllSalaries)
+// app.patch('/api/v1/salaries/:id', patchSalary)
 
 app.all('*', (req, res) => res.sendFile(path.resolve(__dirname, 'public', 'index.html')))
 
-// MAKE A CUSTOM 404 PAGE
-
-app.listen(16361, () => { console.log('Listening on port 16361...') }) // eslint-disable-line no-console
+app.listen(9633, () => { console.log('Listening on port 9633...') }) // eslint-disable-line no-console

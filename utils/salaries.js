@@ -119,7 +119,7 @@ export const onboardingLabels = [
   'Technical Training', 'Orientation',
 ]
 
-const onboarding = {
+export const onboarding = {
   technicalTraining: {
     corporateRecruiter: 0,
     directorOfEngineering: 20,

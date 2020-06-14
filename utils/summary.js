@@ -51,10 +51,10 @@ export const recruitmentAndHiringDirect = {
   personnelExpenses: async (
     annualSalary, usingCorporateRecruiter,
   ) => {
-    const recruiterCost = await Administrative.calculateCorporateRecruiterSalary(annualSalary, usingCorporateRecruiter)
+    const recruiterCost = await Administrative.calculateRecruiterFee(annualSalary, usingCorporateRecruiter)
     const recruitmentAndHiringCost = await Salaries.calculateRecruitmentAndHiringCost()
-    const corporateRecruiterSalaryCost = await (usingCorporateRecruiter
-      ? Salaries.calculateCorporateRecruiterSalary() : 0)
+    const corporateRecruiterSalaryCost =
+      await (usingCorporateRecruiter ? Salaries.calculateCorporateRecruiterSalary() : 0)
 
     return recruiterCost + recruitmentAndHiringCost + corporateRecruiterSalaryCost
   },
