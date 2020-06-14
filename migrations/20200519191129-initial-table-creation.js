@@ -12,6 +12,8 @@ module.exports = {
       laborCode: { type: Sequelize.INTEGER },
       annualSalary: { type: Sequelize.INTEGER },
       hourlySalary: { type: Sequelize.INTEGER },
+      weeklyWorkHours: { type: Sequelize.INTEGER },
+      oesSecCode: { type: Sequelize.STRING },
       degree: { type: Sequelize.STRING },
       externalCorporateRecruiter: { type: Sequelize.BOOLEAN },
       signOnBonus: { type: Sequelize.BOOLEAN },

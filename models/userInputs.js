@@ -26,6 +26,8 @@ export default (connection, Sequelize) => connection.define('userInputs', {
       this.setDataValue('hourlySalary', value * 100)
     },
   },
+  weeklyWorkHours: { type: Sequelize.INTEGER },
+  oesSecCode: { type: Sequelize.STRING },
   degree: { type: Sequelize.STRING },
   externalCorporateRecruiter: { type: Sequelize.BOOLEAN },
   signOnBonus: { type: Sequelize.BOOLEAN },
