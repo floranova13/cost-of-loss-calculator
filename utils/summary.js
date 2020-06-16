@@ -15,7 +15,7 @@ export const exitDirect = {
 
 export const exitHidden = {
   seperationPay: 0,
-  personnelExpenses: () => Salaries.calculateOvertimeToCoverVacancy(),
+  personnelExpenses: async () => Salaries.calculateOvertimeToCoverVacancy(),
   prospectiveCosts: (
     unemploymentTaxIncrease = 0, possibleLegalClaims = 0,
   ) => unemploymentTaxIncrease + possibleLegalClaims,
@@ -28,20 +28,20 @@ export const exitHidden = {
   },
 }
 
-export const exitTotal = {
-  seperationPay: annualSalary => exitDirect.seperationPay(annualSalary) + exitHidden.seperationPay,
-  personnelExpenses: async () => {
-    const hidden = await exitHidden.personnelExpenses()
+// export const exitTotal = {
+//   seperationPay: annualSalary => exitDirect.seperationPay(annualSalary) + exitHidden.seperationPay,
+//   personnelExpenses: async () => {
+//     const hidden = await exitHidden.personnelExpenses()
 
-    return exitDirect.personnelExpenses + hidden
-  },
-  prospectiveCosts: (
-    unemploymentTaxIncrease = 0, possibleLegalClaims = 0,
-  ) => exitDirect.prospectiveCosts + exitHidden.prospectiveCosts(unemploymentTaxIncrease, possibleLegalClaims),
-  productivityLosses: (
-    annualSalary, moraleCost = 0, productionDelayCost = 0,
-  ) => exitDirect.productivityLosses + exitHidden.productivityLosses(annualSalary, moraleCost, productionDelayCost),
-}
+//     return exitDirect.personnelExpenses + hidden
+//   },
+//   prospectiveCosts: (
+//     unemploymentTaxIncrease = 0, possibleLegalClaims = 0,
+//   ) => exitDirect.prospectiveCosts + exitHidden.prospectiveCosts(unemploymentTaxIncrease, possibleLegalClaims),
+//   productivityLosses: (
+//     annualSalary, moraleCost = 0, productionDelayCost = 0,
+//   ) => exitDirect.productivityLosses + exitHidden.productivityLosses(annualSalary, moraleCost, productionDelayCost),
+// }
 
 export const recruitmentAndHiringlabels = [
   'Personnel Expenses', 'Advertising', 'Sign-On Bonuses/Relocation', 'Productivity Losses',
@@ -55,6 +55,10 @@ export const recruitmentAndHiringDirect = {
     const recruitmentAndHiringCost = await Salaries.calculateRecruitmentAndHiringCost()
     const corporateRecruiterSalaryCost =
       await (usingCorporateRecruiter ? Salaries.calculateCorporateRecruiterSalary() : 0)
+
+    console.log(`recruiterCost: ${recruiterCost}`)
+    console.log(`recruitmentAndHiringCost: ${recruitmentAndHiringCost}`)
+    console.log(`corporateRecruiterSalaryCost: ${corporateRecruiterSalaryCost}`)
 
     return recruiterCost + recruitmentAndHiringCost + corporateRecruiterSalaryCost
   },
@@ -76,29 +80,29 @@ export const recruitmentAndHiringHidden = {
   ) => Productivity.calculateRecruitmentAndHiringCost(annualSalary, lostCustomerCost),
 }
 
-export const recruitmentAndHiringTotal = {
-  personnelExpenses: async (annualSalary, usingCorporateRecruiter) => {
-    const direct = await recruitmentAndHiringDirect.personnelExpenses(annualSalary, usingCorporateRecruiter)
+// export const recruitmentAndHiringTotal = {
+//   personnelExpenses: async (annualSalary, usingCorporateRecruiter) => {
+//     const direct = await recruitmentAndHiringDirect.personnelExpenses(annualSalary, usingCorporateRecruiter)
 
-    return direct + recruitmentAndHiringHidden.personnelExpenses
-  },
-  advertising: async () => {
-    const direct = await recruitmentAndHiringDirect.advertising()
+//     return direct + recruitmentAndHiringHidden.personnelExpenses
+//   },
+//   advertising: async () => {
+//     const direct = await recruitmentAndHiringDirect.advertising()
 
-    return direct + recruitmentAndHiringHidden.advertising
-  },
-  signOnBonusesAndRelocation: async (offeringRelocationBonus, offeringSignOnBonus) => {
-    const direct = await recruitmentAndHiringDirect.signOnBonusesAndRelocation(
-      offeringRelocationBonus, offeringSignOnBonus,
-    )
+//     return direct + recruitmentAndHiringHidden.advertising
+//   },
+//   signOnBonusesAndRelocation: async (offeringRelocationBonus, offeringSignOnBonus) => {
+//     const direct = await recruitmentAndHiringDirect.signOnBonusesAndRelocation(
+//       offeringRelocationBonus, offeringSignOnBonus,
+//     )
 
-    return direct + recruitmentAndHiringHidden.signOnBonusesAndRelocation
-  },
-  productivityLosses: (
-    annualSalary, lostCustomerCost = 0,
-  ) => recruitmentAndHiringDirect.productivityLosses +
-    recruitmentAndHiringHidden.productivityLosses(annualSalary, lostCustomerCost),
-}
+//     return direct + recruitmentAndHiringHidden.signOnBonusesAndRelocation
+//   },
+//   productivityLosses: (
+//     annualSalary, lostCustomerCost = 0,
+//   ) => recruitmentAndHiringDirect.productivityLosses +
+//     recruitmentAndHiringHidden.productivityLosses(annualSalary, lostCustomerCost),
+// }
 
 export const onboardinglabels = [
   'Personnel Expenses', 'Outside Training', 'Productivity Losses',
@@ -118,78 +122,78 @@ export const onboardingHidden = {
   productivityLosses: annualSalary => Productivity.calculateOnboardingCost(annualSalary),
 }
 
-export const onboardingTotal = {
-  personnelExpenses: () => onboardingDirect.personnelExpenses + onboardingHidden.personnelExpenses,
-  prospectiveCosts: () => onboardingDirect.prospectiveCosts + onboardingHidden.prospectiveCosts,
-  productivityLosses: annualSalary => onboardingDirect.productivityLosses +
-    onboardingHidden.productivityLosses(annualSalary),
-}
+// export const onboardingTotal = {
+//   personnelExpenses: () => onboardingDirect.personnelExpenses + onboardingHidden.personnelExpenses,
+//   prospectiveCosts: () => onboardingDirect.prospectiveCosts + onboardingHidden.prospectiveCosts,
+//   productivityLosses: annualSalary => onboardingDirect.productivityLosses +
+//     onboardingHidden.productivityLosses(annualSalary),
+// }
 
 
-export const snapshotMain = {
-  exitDirect: annualSalary => exitDirect.seperationPay(annualSalary) + exitDirect.personnelExpenses +
-    exitDirect.prospectiveCosts + exitDirect.productivityLosses,
-  exitHidden: async (
-    unemploymentTaxIncrease = 0, possibleLegalClaims = 0, moraleCost = 0, productionDelayCost = 0,
-  ) => {
-    const personnelExpenses = await exitHidden.personnelExpenses()
-    const prospectiveCosts = exitHidden.prospectiveCosts(unemploymentTaxIncrease, possibleLegalClaims)
-    const productivityLosses = exitHidden.productivityLosses(moraleCost, productionDelayCost)
+// export const snapshotMain = {
+//   exitDirect: annualSalary => exitDirect.seperationPay(annualSalary) + exitDirect.personnelExpenses +
+//     exitDirect.prospectiveCosts + exitDirect.productivityLosses,
+//   exitHidden: async (
+//     unemploymentTaxIncrease = 0, possibleLegalClaims = 0, moraleCost = 0, productionDelayCost = 0,
+//   ) => {
+//     const personnelExpenses = await exitHidden.personnelExpenses()
+//     const prospectiveCosts = exitHidden.prospectiveCosts(unemploymentTaxIncrease, possibleLegalClaims)
+//     const productivityLosses = exitHidden.productivityLosses(moraleCost, productionDelayCost)
 
-    return exitHidden.seperationPay + personnelExpenses + prospectiveCosts + productivityLosses
-  },
-  exitTotal: () => exitTotal.seperationPay() + exitTotal.personnelExpenses() +
-    exitTotal.prospectiveCosts() + exitTotal.productivityLosses(),
-  recruitmentAndHiringDirect: async (
-    annualSalary, usingCorporateRecruiter, offeringRelocationBonus, offeringSignOnBonus,
-  ) => {
-    const personnelExpenses = await recruitmentAndHiringDirect.personnelExpenses(annualSalary, usingCorporateRecruiter)
-    const advertising = await recruitmentAndHiringDirect.advertising()
-    const signOnBonusesAndRelocation =
-      await recruitmentAndHiringDirect.signOnBonusesAndRelocation(offeringRelocationBonus, offeringSignOnBonus)
+//     return exitHidden.seperationPay + personnelExpenses + prospectiveCosts + productivityLosses
+//   },
+//   exitTotal: () => exitTotal.seperationPay() + exitTotal.personnelExpenses() +
+//     exitTotal.prospectiveCosts() + exitTotal.productivityLosses(),
+//   recruitmentAndHiringDirect: async (
+//     annualSalary, usingCorporateRecruiter, offeringRelocationBonus, offeringSignOnBonus,
+//   ) => {
+//     const personnelExpenses = await recruitmentAndHiringDirect.personnelExpenses(annualSalary, usingCorporateRecruiter)
+//     const advertising = await recruitmentAndHiringDirect.advertising()
+//     const signOnBonusesAndRelocation =
+//       await recruitmentAndHiringDirect.signOnBonusesAndRelocation(offeringRelocationBonus, offeringSignOnBonus)
 
-    return personnelExpenses + advertising + signOnBonusesAndRelocation + recruitmentAndHiringDirect.productivityLosses
-  },
-  recruitmentAndHiringHidden: () => recruitmentAndHiringHidden.personnelExpenses +
-  recruitmentAndHiringHidden.advertising + recruitmentAndHiringHidden.signOnBonusesAndRelocation +
-  recruitmentAndHiringHidden.productivityLosses(),
-  recruitmentAndHiringTotal: async (
-    annualSalary, usingCorporateRecruiter, offeringRelocationBonus, offeringSignOnBonus,
-  ) => {
-    const personnelExpenses = await recruitmentAndHiringTotal.personnelExpenses(annualSalary, usingCorporateRecruiter)
-    const advertising = await recruitmentAndHiringTotal.advertising()
-    const signOnBonusesAndRelocation =
-      await recruitmentAndHiringTotal.signOnBonusesAndRelocation(offeringRelocationBonus, offeringSignOnBonus)
+//     return personnelExpenses + advertising + signOnBonusesAndRelocation + recruitmentAndHiringDirect.productivityLosses
+//   },
+//   recruitmentAndHiringHidden: () => recruitmentAndHiringHidden.personnelExpenses +
+//   recruitmentAndHiringHidden.advertising + recruitmentAndHiringHidden.signOnBonusesAndRelocation +
+//   recruitmentAndHiringHidden.productivityLosses(),
+//   recruitmentAndHiringTotal: async (
+//     annualSalary, usingCorporateRecruiter, offeringRelocationBonus, offeringSignOnBonus,
+//   ) => {
+//     const personnelExpenses = await recruitmentAndHiringTotal.personnelExpenses(annualSalary, usingCorporateRecruiter)
+//     const advertising = await recruitmentAndHiringTotal.advertising()
+//     const signOnBonusesAndRelocation =
+//       await recruitmentAndHiringTotal.signOnBonusesAndRelocation(offeringRelocationBonus, offeringSignOnBonus)
 
-    return personnelExpenses + advertising + signOnBonusesAndRelocation + recruitmentAndHiringTotal.productivityLosses()
-  },
-  onboardingDirect: () => onboardingDirect.personnelExpenses +
-    onboardingDirect.outsideTraining() + onboardingDirect.productivityLosses,
-  onboardingHidden: () => onboardingHidden.personnelExpenses +
-    onboardingHidden.outsideTraining + onboardingHidden.productivityLosses(),
-  onboardingTotal: () => onboardingTotal.personnelExpenses() +
-    onboardingTotal.outsideTraining() + onboardingTotal.productivityLosses(),
-}
+//     return personnelExpenses + advertising + signOnBonusesAndRelocation + recruitmentAndHiringTotal.productivityLosses()
+//   },
+//   onboardingDirect: () => onboardingDirect.personnelExpenses +
+//     onboardingDirect.outsideTraining() + onboardingDirect.productivityLosses,
+//   onboardingHidden: () => onboardingHidden.personnelExpenses +
+//     onboardingHidden.outsideTraining + onboardingHidden.productivityLosses(),
+//   onboardingTotal: () => onboardingTotal.personnelExpenses() +
+//     onboardingTotal.outsideTraining() + onboardingTotal.productivityLosses(),
+// }
 
-export const snapshotTotal = {
-  directCost: async (
-    annualSalary, usingCorporateRecruiter, offeringRelocationBonus, offeringSignOnBonus,
-  ) => {
-    const recruitmentAndHiring = await snapshotMain.recruitmentAndHiringDirect(
-      annualSalary, usingCorporateRecruiter, offeringRelocationBonus, offeringSignOnBonus,
-    )
-    return snapshotMain.exitDirect(annualSalary) + recruitmentAndHiring + snapshotMain.onboardingDirect()
-  },
-  hiddenCost: async (unemploymentTaxIncrease = 0, possibleLegalClaims = 0, moraleCost = 0, productionDelayCost = 0) => {
-    const exit =
-      await snapshotMain.exitHidden(unemploymentTaxIncrease, possibleLegalClaims, moraleCost, productionDelayCost)
+// export const snapshotTotal = {
+//   directCost: async (
+//     annualSalary, usingCorporateRecruiter, offeringRelocationBonus, offeringSignOnBonus,
+//   ) => {
+//     const recruitmentAndHiring = await snapshotMain.recruitmentAndHiringDirect(
+//       annualSalary, usingCorporateRecruiter, offeringRelocationBonus, offeringSignOnBonus,
+//     )
+//     return snapshotMain.exitDirect(annualSalary) + recruitmentAndHiring + snapshotMain.onboardingDirect()
+//   },
+//   hiddenCost: async (unemploymentTaxIncrease = 0, possibleLegalClaims = 0, moraleCost = 0, productionDelayCost = 0) => {
+//     const exit =
+//       await snapshotMain.exitHidden(unemploymentTaxIncrease, possibleLegalClaims, moraleCost, productionDelayCost)
 
-    return exit + snapshotMain.recruitmentAndHiringHidden() + snapshotMain.onboardingHidden()
-  },
-}
+//     return exit + snapshotMain.recruitmentAndHiringHidden() + snapshotMain.onboardingHidden()
+//   },
+// }
 
 // export const snapshotFullTotal = () => snapshotTotal.directCost() + snapshotTotal.hiddenCost()
 
-export const programCost = 5710 * 12 + 1300
+export const programCost = 1300 * 12 + 5710
 
 // export const overallSavings = (snapshotFullTotal() - programCost)

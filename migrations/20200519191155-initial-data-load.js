@@ -58,8 +58,8 @@ module.exports = {
       { title: 'Director of Engineering (Hiring Manager)', totalSalary: 8433, benefitsPercent: 35 },
       { title: 'IT Technician', totalSalary: 2179, benefitsPercent: 35 },
       { title: 'Human Resources Manager', totalSalary: 4079, benefitsPercent: 35 },
-      { title: 'CEO, Executives/Decision-Maker', totalSalary: 175, benefitsPercent: 35 },
-      { title: 'Peer Worker (Estimated 3 people)', totalSalary: 1, benefitsPercent: 35 },
+      { title: 'CEO, Executives/Decision-Maker', totalSalary: 8414, benefitsPercent: 35 },
+      { title: 'Peer Worker (Estimated 3 people)', totalSalary: 4808, benefitsPercent: 35 },
     ])
   },
 

@@ -1,13 +1,13 @@
 import fetchSalaries from '../actions/salaries'
 
-const salaryKeys = [
-  { corporateRecruiter: 'Corporate Recruiter' },
-  { directorOfEngineering: 'Director of Engineering (Hiring Manager)' },
-  { itTechnician: 'IT Technician' },
-  { humanResourcesManager: 'Human Resources Manager' },
-  { executives: 'CEO, Executives/Decision-Maker' },
-  { peerWorker: 'Peer Worker (Estimated 3 people)' },
-]
+const salaryKeys = {
+  corporateRecruiter: 'Corporate Recruiter',
+  directorOfEngineering: 'Director of Engineering (Hiring Manager)',
+  itTechnician: 'IT Technician',
+  humanResourcesManager: 'Human Resources Manager',
+  executives: 'CEO, Executives/Decision-Maker',
+  peerWorker: 'Peer Worker (Estimated 3 people)',
+}
 
 export const retrieveSalaries = async () => {
   const salaries = await fetchSalaries()
@@ -152,31 +152,36 @@ const totalHours = {
 export const calculateCorporateRecruiterSalary = async () => {
   const salaries = await retrieveSalaries()
   const recruiter = salaries.find(salary => salary.title === 'Corporate Recruiter')
-  const hourlyCost = (recruiter.totalSalary * (1 + recruiter.benefitsPercent)) * totalHours.corporateRecruiter
+  const hourlyCost =
+    Math.ceil(recruiter.totalSalary * (100 + recruiter.benefitsPercent) * totalHours.corporateRecruiter) / 100
 
-  return Math.ciel(hourlyCost * 100) / 100
+  return hourlyCost
 }
 
 export const calculateOvertimeToCoverVacancy = async () => {
   const salaries = await retrieveSalaries()
 
   const cost = Object.entries(salaryKeys).reduce((acc, curr) => {
-    const salary = salaries.find(curr[1])
+    const salary = salaries.find(currSalary => currSalary.title === curr[1])
 
-    return acc + (salary.totalSalary * (1 + salary.benefitsPercent)) * exitHours.vacencyOvertime[curr[0]]
+    return acc + (Math.ceil(
+      (salary.totalSalary * (100 + salary.benefitsPercent)) * exitHours.vacencyOvertime[curr[0]],
+    ) / 100)
   }, 0)
 
-  return Math.ciel(cost * 100) / 100
+  return Math.ceil(cost * 100) / 100
 }
 
 export const calculateRecruitmentAndHiringCost = async () => {
   const salaries = await retrieveSalaries()
 
   const cost = Object.entries(salaryKeys).reduce((acc, curr) => {
-    const salary = salaries.find(curr[1])
-
-    return acc + (salary.totalSalary * (1 + salary.benefitsPercent)) * totalrecruitmentAndHiringHours[curr[0]]
+    const salary = salaries.find(currSalary => currSalary.title === curr[1])
+    console.log(`totalrecruitmentAndHiringHours[curr[0]]: ${totalrecruitmentAndHiringHours(curr[0])}`)
+    return acc + (Math.ceil(
+      (salary.totalSalary * (100 + salary.benefitsPercent)) * totalrecruitmentAndHiringHours(curr[0]),
+    ) / 100)
   }, 0)
 
-  return Math.ciel(cost * 100) / 100
+  return Math.ceil(cost * 100) / 100
 }

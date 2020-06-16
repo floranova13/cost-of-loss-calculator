@@ -1,32 +1,58 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { useHistory } from 'react-router-dom'
 import Page from '../components/Page'
 import Title from '../components/Title'
 import Row from '../components/TableRow'
+import Continue from '../components/Continue'
 import * as Summary from '../utils/summary'
+import asDollars from '../utils'
 
 export default () => {
+  const history = useHistory()
+
+  const [exitHidPersonnelExpen, setExitHidPersonnelExpen] = useState(0)
+  const [exitHidProductiveLoss, setExitHidProductiveLoss] = useState(0)
+  const [recruitDirPersonnelExpen, setRecruitDirPersonnelExpen] = useState(0)
+  const [recruitDirAdvert, setRecruitDirAdvert] = useState(0)
+  const [recruitDirSignOnAndRelocate, setRecruitDirSignOnAndRelocate] = useState(0)
+
+  const nameFirst = localStorage.getItem('nameFirst')
+  const nameLast = localStorage.getItem('nameLast')
+  const periodStart = localStorage.getItem('periodStart')
+  const periodEnd = localStorage.getItem('periodEnd')
+  const companyIndustry = localStorage.getItem('companyIndustry')
+  const occupationalSpecialty = localStorage.getItem('occupationalSpecialty')
+  const jobTitle = localStorage.getItem('jobTitle')
+  const laborCode = localStorage.getItem('laborCode')
   const annualSalary = localStorage.getItem('annualSalary')
+  const hourlySalary = localStorage.getItem('hourlySalary')
+  const weeklyWorkHours = localStorage.getItem('weeklyWorkHours')
+  const oesSecCode = localStorage.getItem('oesSecCode')
+  const degree = localStorage.getItem('degree')
   const usingRecruiter = localStorage.getItem('usingRecruiter')
   const offeringSigningBonus = localStorage.getItem('offeringSigningBonus')
   const offeringRelocationBonus = localStorage.getItem('offeringRelocationBonus')
 
-  let exitHidProductiveLoss
-  let exitHidPersonnelExpen
-  let recruitDirPersonnelExpen
-  let recruitDirAdvert
-  let recruitDirSignOnAndRelocate
-
   useEffect(() => {
-    (async function calculateSummary() {
-      exitHidPersonnelExpen = await Summary.exitHidden.personnelExpenses()
-      exitHidProductiveLoss = await Summary.exitHidden.productivityLosses(annualSalary) // ADD FORM FOR: moraleCost + productionDelayCost
-      recruitDirPersonnelExpen =
+    async function calculateSummary() {
+      const eHPersonnelExpen = await Summary.exitHidden.personnelExpenses()
+      const eHProductiveLoss = await Summary.exitHidden.productivityLosses(annualSalary) // ADD FORM FOR: moraleCost + productionDelayCost
+      const rDPersonnelExpen =
         await Summary.recruitmentAndHiringDirect.personnelExpenses(annualSalary, usingRecruiter)
-      recruitDirAdvert = await Summary.recruitmentAndHiringDirect.advertising()
-      recruitDirSignOnAndRelocate = await Summary.recruitmentAndHiringDirect(
-        offeringRelocationBonus, offeringSigningBonus,
-      )
-    }())
+      const rDAdvert = await Summary.recruitmentAndHiringDirect.advertising()
+      const rDSignOnAndRelocate =
+        await Summary.recruitmentAndHiringDirect.signOnBonusesAndRelocation(
+          offeringRelocationBonus, offeringSigningBonus,
+        )
+
+      setExitHidPersonnelExpen(eHPersonnelExpen)
+      setExitHidProductiveLoss(eHProductiveLoss)
+      setRecruitDirPersonnelExpen(rDPersonnelExpen)
+      setRecruitDirAdvert(rDAdvert)
+      setRecruitDirSignOnAndRelocate(rDSignOnAndRelocate)
+    }
+    calculateSummary()
   }, [])
 
   const exitDirSepPay = Summary.exitDirect.seperationPay(annualSalary)
@@ -69,6 +95,28 @@ export default () => {
   const snapTotalDir = snapExitDir + snapRecruitDir + snapOnboardingDir
   const snapTotalHid = snapExitHid + snapRecruitHid + snapOnboardingHid
 
+  const nextPage = async () => {
+    await axios.post(`${API_BASE_URL}/userInputs`, { // eslint-disable-line no-undef
+      nameFirst,
+      nameLast,
+      periodStart,
+      periodEnd,
+      companyIndustry,
+      occupationalSpecialty,
+      jobTitle,
+      laborCode,
+      annualSalary,
+      hourlySalary,
+      weeklyWorkHours,
+      oesSecCode,
+      degree,
+      externalCorporateRecruiter: usingRecruiter,
+      signOnBonus: offeringSigningBonus,
+      relocationBonus: offeringRelocationBonus,
+    })
+    history.push('/print')
+  }
+
   return (
     <Page>
       <Title />
@@ -91,27 +139,27 @@ export default () => {
           </tr>
           <Row
             valOne="Seperation Pay"
-            valTwo={exitDirSepPay}
-            valThree={Summary.exitHidden.seperationPay}
-            valFour={exitTotalSepPay}
+            valTwo={asDollars(exitDirSepPay)}
+            valThree={asDollars(Summary.exitHidden.seperationPay)}
+            valFour={asDollars(exitTotalSepPay)}
           />
           <Row
             valOne="Personnel Expenses"
-            valTwo={Summary.exitDirect.personnelExpenses}
-            valThree={exitHidPersonnelExpen}
-            valFour={exitTotalPersonnelExpen}
+            valTwo={asDollars(Summary.exitDirect.personnelExpenses)}
+            valThree={asDollars(exitHidPersonnelExpen)}
+            valFour={asDollars(exitTotalPersonnelExpen)}
           />
           <Row
             valOne="Prospective Costs"
-            valTwo={Summary.exitDirect.prospectiveCosts}
-            valThree={exitHidProspective}
-            valFour={exitTotalProspective}
+            valTwo={asDollars(Summary.exitDirect.prospectiveCosts)}
+            valThree={asDollars(exitHidProspective)}
+            valFour={asDollars(exitTotalProspective)}
           />
           <Row
             valOne="Productivity Losses"
-            valTwo={Summary.exitDirect.productivityLosses}
-            valThree={exitHidProductiveLoss}
-            valFour={exitTotalProductiveLoss}
+            valTwo={asDollars(Summary.exitDirect.productivityLosses)}
+            valThree={asDollars(exitHidProductiveLoss)}
+            valFour={asDollars(exitTotalProductiveLoss)}
           />
           <tr>
             <th>Recruitment and Hiring</th>
@@ -121,27 +169,27 @@ export default () => {
           </tr>
           <Row
             valOne="Personnel Expenses"
-            valTwo={recruitDirPersonnelExpen}
-            valThree={Summary.recruitmentAndHiringHidden.personnelExpenses}
-            valFour={recruitTotalPersonnelExpen}
+            valTwo={asDollars(recruitDirPersonnelExpen)}
+            valThree={asDollars(Summary.recruitmentAndHiringHidden.personnelExpenses)}
+            valFour={asDollars(recruitTotalPersonnelExpen)}
           />
           <Row
             valOne="Advertising"
-            valTwo={recruitDirAdvert}
-            valThree={Summary.recruitmentAndHiringHidden.advertising}
-            valFour={recruitTotalAdvert}
+            valTwo={asDollars(recruitDirAdvert)}
+            valThree={asDollars(Summary.recruitmentAndHiringHidden.advertising)}
+            valFour={asDollars(recruitTotalAdvert)}
           />
           <Row
             valOne="Sign-On Bonuses/Relocation"
-            valTwo={recruitDirSignOnAndRelocate}
-            valThree={Summary.recruitmentAndHiringHidden.signOnBonusesAndRelocation}
-            valFour={recruitTotalSignOnAndRelocate}
+            valTwo={asDollars(recruitDirSignOnAndRelocate)}
+            valThree={asDollars(Summary.recruitmentAndHiringHidden.signOnBonusesAndRelocation)}
+            valFour={asDollars(recruitTotalSignOnAndRelocate)}
           />
           <Row
             valOne="Productivity Losses"
-            valTwo={Summary.recruitmentAndHiringDirect.productivityLosses}
-            valThree={recruitHidProductiveLoss}
-            valFour={recruitTotalProductiveLoss}
+            valTwo={asDollars(Summary.recruitmentAndHiringDirect.productivityLosses)}
+            valThree={asDollars(recruitHidProductiveLoss)}
+            valFour={asDollars(recruitTotalProductiveLoss)}
           />
           <tr>
             <th>Onboarding</th>
@@ -151,63 +199,64 @@ export default () => {
           </tr>
           <Row
             valOne="Personnel Expenses"
-            valTwo={Summary.onboardingDirect.personnelExpenses}
-            valThree={Summary.onboardingHidden.personnelExpenses}
-            valFour={onboardingTotalPersonnelExpense}
+            valTwo={asDollars(Summary.onboardingDirect.personnelExpenses)}
+            valThree={asDollars(Summary.onboardingHidden.personnelExpenses)}
+            valFour={asDollars(onboardingTotalPersonnelExpense)}
           />
           <Row
             valOne="Outside Training"
-            valTwo={onboardingDirOutsideTraining}
-            valThree={Summary.onboardingHidden.outsideTraining}
-            valFour={onboardingTotalOutsideTraining}
+            valTwo={asDollars(onboardingDirOutsideTraining)}
+            valThree={asDollars(Summary.onboardingHidden.outsideTraining)}
+            valFour={asDollars(onboardingTotalOutsideTraining)}
           />
           <Row
             valOne="Productivity Losses"
-            valTwo={Summary.onboardingDirect.productivityLosses}
-            valThree={onboardingHidProductiveLoss}
-            valFour={onboardingTotalProductiveLoss}
+            valTwo={asDollars(Summary.onboardingDirect.productivityLosses)}
+            valThree={asDollars(onboardingHidProductiveLoss)}
+            valFour={asDollars(onboardingTotalProductiveLoss)}
           />
           <tr>
             <th colSpan="4">Snapshot by Type of Cost</th>
           </tr>
           <tr>
             <th>Exit</th>
-            <td>{snapExitDir}</td>
-            <td>{snapExitHid}</td>
-            <td>{snapExitDir + snapExitHid}</td>
+            <td>{asDollars(snapExitDir)}</td>
+            <td>{asDollars(snapExitHid)}</td>
+            <td>{asDollars(snapExitDir + snapExitHid)}</td>
           </tr>
           <tr>
             <th>Recruitment and Hiring</th>
-            <td>{snapRecruitDir}</td>
-            <td>{snapRecruitHid}</td>
-            <td>{snapExitDir + snapExitHid}</td>
+            <td>{asDollars(snapRecruitDir)}</td>
+            <td>{asDollars(snapRecruitHid)}</td>
+            <td>{asDollars(snapRecruitDir + snapRecruitHid)}</td>
           </tr>
           <tr>
             <th>Onboarding</th>
-            <td>{snapOnboardingDir}</td>
-            <td>{snapOnboardingHid}</td>
-            <td>{snapOnboardingDir + snapOnboardingHid}</td>
+            <td>{asDollars(snapOnboardingDir)}</td>
+            <td>{asDollars(snapOnboardingHid)}</td>
+            <td>{asDollars(snapOnboardingDir + snapOnboardingHid)}</td>
           </tr>
           <tr>
             <th>Total Cost of Loss of Employee</th>
-            <th>{snapTotalDir}</th>
-            <th>{snapTotalHid}</th>
-            <th>{snapTotalDir + snapTotalHid}</th>
+            <th>{asDollars(snapTotalDir)}</th>
+            <th>{asDollars(snapTotalHid)}</th>
+            <th>{asDollars(snapTotalDir + snapTotalHid)}</th>
           </tr>
           <tr>
             <td>OAF Program Cost</td>
             <td> </td>
             <td> </td>
-            <td>{Summary.programCost}</td>
+            <td>{asDollars(Summary.programCost)}</td>
           </tr>
           <Row valOne="" valTwo="" valThree="" valFour="" />
           <Row valOne="" valTwo="" valThree="" valFour="" />
           <tr>
             <th colSpan="3">Overall Savings with OA Program</th>
-            <th>{snapTotalDir + snapTotalHid - Summary.programCost}</th>
+            <th>{asDollars(snapTotalDir + snapTotalHid - Summary.programCost)}</th>
           </tr>
         </tbody>
       </table>
+      <Continue handleClick={nextPage} labelText="Continue" />
     </Page>
   )
 }
