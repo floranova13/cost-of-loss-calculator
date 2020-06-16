@@ -14,9 +14,8 @@ import {
 import {
   getAllSigningBonuses, getSigningBonusById, saveNewSigningBonus, patchSigningBonusAmount, deleteSigningBonus,
 } from './controllers/signingBonuses'
-import {
-  getAllSalaries, getSalaryById,
-} from './controllers/salaries'
+import { getAllSalaries, getSalaryById } from './controllers/salaries'
+import { getAllUserInputs, saveNewUserInput } from './controllers/userInputs'
 
 const app = express()
 
@@ -46,6 +45,9 @@ app.delete('/api/v1/signing-bonuses/:id', deleteSigningBonus)
 
 app.get('/api/v1/salaries', getAllSalaries)
 app.get('/api/v1/salaries/:id', getSalaryById)
+
+app.get('/api/v1/userInputs', getAllUserInputs)
+app.post('/api/v1/userInputs', express.json(), saveNewUserInput)
 
 app.all('*', (req, res) => res.sendFile(path.resolve(__dirname, 'public', 'index.html')))
 

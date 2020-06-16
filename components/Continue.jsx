@@ -3,12 +3,15 @@ import styled from 'styled-components'
 
 const Continue = styled.button`
   font-size: 18px;
-  margin: 10px;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
   text-align: center;
-  border: 3px solid grey;
+  border: 3px solid #214080;
   border-radius: 3px;
-  background-color: black;
+  background-color: #774C9E;
   color: white;
+  display: block;
 `
 
 export default ({ handleClick, labelText }) => (

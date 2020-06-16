@@ -31,5 +31,5 @@ export default (connection, Sequelize) => connection.define('userInputs', {
   degree: { type: Sequelize.STRING },
   externalCorporateRecruiter: { type: Sequelize.BOOLEAN },
   signOnBonus: { type: Sequelize.BOOLEAN },
-  relocationBonus: { type: Sequelize.BOOLEAN },
+  N: { type: Sequelize.BOOLEAN },
 }, { paranoid: true })

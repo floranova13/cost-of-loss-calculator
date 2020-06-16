@@ -147,8 +147,6 @@ const totalHours = {
   peerWorker: 103,
 }
 
-// const overtimeHours = salaryKeys.keys.reduce((acc, curr) => acc + exitHours.vacencyOvertime[curr], 0) // WHY ISNT THIS USED?
-
 export const calculateCorporateRecruiterSalary = async () => {
   const salaries = await retrieveSalaries()
   const recruiter = salaries.find(salary => salary.title === 'Corporate Recruiter')
@@ -177,7 +175,6 @@ export const calculateRecruitmentAndHiringCost = async () => {
 
   const cost = Object.entries(salaryKeys).reduce((acc, curr) => {
     const salary = salaries.find(currSalary => currSalary.title === curr[1])
-    console.log(`totalrecruitmentAndHiringHours[curr[0]]: ${totalrecruitmentAndHiringHours(curr[0])}`)
     return acc + (Math.ceil(
       (salary.totalSalary * (100 + salary.benefitsPercent)) * totalrecruitmentAndHiringHours(curr[0]),
     ) / 100)
