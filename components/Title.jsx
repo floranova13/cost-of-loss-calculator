@@ -1,10 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const Title = styled.div`
-  font-size: 24px;
-  font-weight: 600;
-  text-align: center;
+const BrandImage = styled.img`
+  margin: 30px;
 `
 
-export default () => (<Title>Open Avenues Foundation</Title>)
+export default () => (<BrandImage src="./img/openAvenues.png" alt="Open Avenues Foundation" />)

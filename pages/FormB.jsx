@@ -31,9 +31,9 @@ export default () => {
   return (
     <Page>
       <Title />
-      <NumberInput getter={annualSalary} setter={setAnnualSalary} name="DOL Annual Salary:" step="0.01" />
-      <NumberInput getter={hourlySalary} setter={setHourlySalary} name="DOL Hourly Salary:" step="0.01" />
-      <NumberInput getter={weeklyWorkHours} setter={setWeeklyWorkHours} name="Weekly Work Hours:" step="1" />
+      <NumberInput getter={annualSalary} setter={setAnnualSalary} name="DOL Annual Salary:" dollarSign />
+      <NumberInput getter={hourlySalary} setter={setHourlySalary} name="DOL Hourly Salary:" dollarSign />
+      <NumberInput getter={weeklyWorkHours} setter={setWeeklyWorkHours} name="Weekly Work Hours:" />
       <TextInput
         getter={oesSecCode}
         setter={setOesSecCode}

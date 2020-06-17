@@ -22,3 +22,27 @@ export const getSalaryById = async (req, res) => {
     return res.status(500).send('Unable to retrieve salary, please try again')
   }
 }
+
+export const patchSalaryTotalSalary = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { totalSalary } = req.body
+    await models.Salaries.update({ totalSalary }, { where: { id } })
+
+    return res.sendStatus(200)
+  } catch (error) {
+    return res.status(500).send('Unable to patch salary total salary, please try again')
+  }
+}
+
+export const patchSalaryBenefitsPercent = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { benefitsPercent } = req.body
+    await models.Salaries.update({ benefitsPercent }, { where: { id } })
+
+    return res.sendStatus(200)
+  } catch (error) {
+    return res.status(500).send('Unable to patch salary benefits percent, please try again')
+  }
+}
