@@ -1,19 +1,17 @@
 /* eslint-disable max-len */
-const chai = require('chai')
-const sinon = require('sinon')
-const sinonChai = require('sinon-chai')
-const models = require('../../models')
-const {
-  after, afterEach, before, beforeEach, describe, it
-} = require('mocha')
-const { singleSigningBonus, signingBonusList, postedSigningBonus } = require('../mocks/signingBonuses')
-const {
-  getAllSigningBonuses, getSigningBonusBySlug, saveNewSigningBonus, replaceSigningBonus, patchSigningBonusCost, patchSigningBonusNotes, deleteSigningBonus
-} = require('../../controllers/signingBonuses')
+import chai, { expect } from 'chai'
+import sinon from 'sinon'
+import sinonChai from 'sinon-chai'
+import {
+  after, afterEach, before, beforeEach, describe, it,
+} from 'mocha'
+import models from '../../models'
+import { singleSigningBonus, signingBonusList, postedSigningBonus } from '../mocks/signingBonuses'
+import {
+  getAllSigningBonuses, getSigningBonusById, saveNewSigningBonus, patchSigningBonusAmount, deleteSigningBonus,
+} from '../../controllers/signingBonuses'
 
 chai.use(sinonChai)
-
-const { expect } = chai
 
 describe('Controllers - SigningBonuses', () => {
   let response
@@ -73,58 +71,48 @@ describe('Controllers - SigningBonuses', () => {
       expect(stubbedSend).to.have.been.calledWith(signingBonusList)
     })
 
-    it('returns a 404 status and sends a message when the list of signing bonuses is empty', async () => {
-      stubbedFindAll.returns([])
-
-      await getAllSigningBonuses({}, response)
-
-      expect(stubbedFindAll).to.have.callCount(1)
-      expect(stubbedStatus).to.have.been.calledWith(404)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('No signing bonuses found')
-    })
-
     it('returns a 500 status and sends a message when an error occurs retrieving the signing bonuses', async () => {
       stubbedFindAll.throws('ERROR!')
 
       await getAllSigningBonuses({}, response)
 
       expect(stubbedStatus).to.have.been.calledWith(500)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to retrieve signing bonuses list, please try again')
+      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to retrieve signing bonus list, please try again')
     })
   })
 
-  describe('getSigningBonusBySlug', () => {
-    it('retrieves the signing bonuses associated with the provided slug from the database and calls response.send() with it', async () => {
-      const request = { params: { slug: 'glassdoor' } }
+  describe('getSigningBonusById', () => {
+    it('retrieves the signing bonuses associated with the provided id from the database and calls response.send() with it', async () => {
+      const request = { params: { id: 1 } }
 
       stubbedFindOne.returns(singleSigningBonus)
 
-      await getSigningBonusBySlug(request, response)
+      await getSigningBonusById(request, response)
 
-      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'glassdoor' } })
+      expect(stubbedFindOne).to.have.been.calledWith({ where: { id: 1 } })
       expect(stubbedSend).to.have.been.calledWith(singleSigningBonus)
     })
 
     it('returns a 404 status and sends a message when no signing bonuses is found', async () => {
-      const request = { params: { slug: 'glassdoor' } }
+      const request = { params: { id: -1 } }
 
       stubbedFindOne.returns(null)
 
-      await getSigningBonusBySlug(request, response)
+      await getSigningBonusById(request, response)
 
-      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'glassdoor' } })
+      expect(stubbedFindOne).to.have.been.calledWith({ where: { id: -1 } })
       expect(stubbedStatus).to.have.been.calledWith(404)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('No signing bonuses found with a slug of "glassdoor"')
+      expect(stubbedStatusDotSend).to.have.been.calledWith('No signing bonus with the id of "-1" found')
     })
 
-    it('returns a 500 status and sends a message when an error occurs retrieving the signing bonus by slug', async () => {
-      const request = { params: { slug: 'glassdoor' } }
+    it('returns a 500 status and sends a message when an error occurs retrieving the signing bonus by id', async () => {
+      const request = { params: { id: 1 } }
 
       stubbedFindOne.throws('ERROR!')
 
-      await getSigningBonusBySlug(request, response)
+      await getSigningBonusById(request, response)
 
-      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'glassdoor' } })
+      expect(stubbedFindOne).to.have.been.calledWith({ where: { id: 1 } })
       expect(stubbedStatus).to.have.been.calledWith(500)
       expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to retrieve signing bonus, please try again')
     })
@@ -156,116 +144,62 @@ describe('Controllers - SigningBonuses', () => {
     })
   })
 
-  describe('replaceSigningBonus', () => {
-    it('accepts new signing bonus details and replaces the signing bonus referenced by slug in the route with the new one in the database, returning the new signing bonus', async () => {
-      const request = { params: { slug: 'glassdoor' }, body: postedSigningBonus }
+  describe('patchSigningBonusAmount', () => {
+    it('accepts a new signing bonus amount and assigns it to the signing bonus referenced by id in the route, returning the patched signing bonus', async () => {
+      const request = { params: { id: 1 }, body: { amount: 0 } }
 
-      stubbedUpdate.returns(postedSigningBonus)
+      await patchSigningBonusAmount(request, response)
 
-      await replaceSigningBonus(request, response)
-
-      expect(stubbedUpdate).to.have.been.calledWith(postedSigningBonus, { where: { slug: 'glassdoor' } })
-      expect(stubbedSend).to.have.been.calledWith(postedSigningBonus)
+      expect(stubbedUpdate).to.have.been.calledWith({ amount: 0 }, { where: { id: 1 } })
+      expect(stubbedSendStatus).to.have.been.calledWith(200)
     })
 
-    it('returns a 500 status and sends a message when an error occurs replacing the referenced signing bonus', async () => {
-      const request = { params: { slug: '' }, body: { } }
+    it('returns a 500 status and sends a message when an error occurs patching the signing bonus amount', async () => {
+      const request = { params: { id: '' }, body: { } }
 
-      stubbedUpdate.returns(Promise.reject('Failed Update'))
+      stubbedUpdate.returns(Promise.reject(new Error('ERROR!')))
 
-      await replaceSigningBonus(request, response)
+      await patchSigningBonusAmount(request, response)
 
-      expect(stubbedUpdate).to.have.been.calledWith({
-        service: undefined, cost: undefined, notes: undefined, slug: undefined
-      }, { where: { slug: '' } })
+      expect(stubbedUpdate).to.have.been.calledWith({ amount: undefined }, { where: { id: '' } })
       expect(stubbedStatus).to.have.been.calledWith(500)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to replace signing bonus, please try again')
-    })
-  })
-
-  describe('patchSigningBonusCost', () => {
-    it('accepts a new signing bonus cost and assigns it to the signing bonus referenced by slug in the route, returning the patched signing bonus', async () => {
-      const request = { params: { slug: 'glassdoor' }, body: { cost: 0 } }
-
-      stubbedUpdate.returns(postedSigningBonus)
-
-      await patchSigningBonusCost(request, response)
-
-      expect(stubbedUpdate).to.have.been.calledWith({ cost: 0 }, { where: { slug: 'glassdoor' } })
-      expect(stubbedSend).to.have.been.calledWith({ ...postedSigningBonus, cost: 0 })
-    })
-
-    it('returns a 500 status and sends a message when an error occurs patching the signing bonus cost', async () => {
-      const request = { params: { slug: '' }, body: { } }
-
-      stubbedUpdate.returns(Promise.reject('Failed Update'))
-
-      await patchSigningBonusCost(request, response)
-
-      expect(stubbedUpdate).to.have.been.calledWith({ cost: undefined }, { where: { slug: '' } })
-      expect(stubbedStatus).to.have.been.calledWith(500)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to patch signing bonus cost, please try again')
-    })
-  })
-
-  describe('patchSigningBonusNotes', () => {
-    it('accepts a new signing bonus notes value and assigns it to the signing bonus referenced by slug in the route, returning the patched signing bonus', async () => {
-      const request = { params: { slug: 'glassdoor' }, body: { notes: '' } }
-
-      stubbedUpdate.returns(postedSigningBonus)
-
-      await patchSigningBonusNotes(request, response)
-
-      expect(stubbedUpdate).to.have.been.calledWith({ notes: '' }, { where: { slug: 'glassdoor' } })
-      expect(stubbedSend).to.have.been.calledWith({ ...postedSigningBonus, notes: '' })
-    })
-
-    it('returns a 500 status and sends a message when an error occurs patching the signing bonus notes', async () => {
-      const request = { params: { slug: '' }, body: { } }
-
-      stubbedUpdate.returns(Promise.reject('Failed Update'))
-
-      await patchSigningBonusNotes(request, response)
-
-      expect(stubbedUpdate).to.have.been.calledWith({ notes: undefined }, { where: { slug: '' } })
-      expect(stubbedStatus).to.have.been.calledWith(500)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to patch signing bonus notes, please try again')
+      expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to patch signing bonus amount, please try again')
     })
   })
 
   describe('deleteSigningBonus', () => {
-    it('Deletes a signing bonus referenced by slug in the route from the database and calls sendStatus(204)', async () => {
-      const request = { params: { slug: 'glassdoor' } }
+    it('Deletes a signing bonus referenced by id in the route from the database and calls sendStatus(200)', async () => {
+      const request = { params: { id: 1 } }
 
       stubbedDestroy.returns(1)
 
       await deleteSigningBonus(request, response)
 
-      expect(stubbedDestroy).to.have.been.calledWith({ where: { slug: 'glassdoor' } })
-      expect(stubbedSendStatus).to.have.been.calledWith(204)
+      expect(stubbedDestroy).to.have.been.calledWith({ where: { id: 1 } })
+      expect(stubbedSendStatus).to.have.been.calledWith(200)
     })
 
 
-    it('returns a 404 status and sends a message when no signing bonus is found with the slug in the route', async () => {
-      const request = { params: { slug: '' } }
+    it('returns a 404 status and sends a message when no signing bonus is found with the id in the route', async () => {
+      const request = { params: { id: '' } }
 
       stubbedDestroy.returns(0)
 
       await deleteSigningBonus(request, response)
 
-      expect(stubbedDestroy).to.have.been.calledWith({ where: { slug: '' } })
+      expect(stubbedDestroy).to.have.been.calledWith({ where: { id: '' } })
       expect(stubbedStatus).to.have.been.calledWith(404)
-      expect(stubbedStatusDotSend).to.have.been.calledWith('No signing bonus found with a slug of ""')
+      expect(stubbedStatusDotSend).to.have.been.calledWith('No signing bonus with that id to delete')
     })
 
     it('returns a 500 status when an error occurs deleting the signing bonus', async () => {
-      const request = { params: { slug: 'glassdoor' } }
+      const request = { params: { id: 1 } }
 
       stubbedDestroy.throws('ERROR!')
 
       await deleteSigningBonus(request, response)
 
-      expect(stubbedDestroy).to.have.been.calledWith({ where: { slug: 'glassdoor' } })
+      expect(stubbedDestroy).to.have.been.calledWith({ where: { id: 1 } })
       expect(stubbedStatus).to.have.been.calledWith(500)
       expect(stubbedStatusDotSend).to.have.been.calledWith('Unable to delete signing bonus, please try again')
     })
