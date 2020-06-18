@@ -14,7 +14,7 @@ export default (connection, Sequelize) => connection.define('salaries', {
   totalBenefits: {
     type: Sequelize.VIRTUAL,
     get() {
-      return Math.round((this.getDataValue('totalSalary') * this.getDataValue('benefitsPercent'))) / 100
+      return Math.round((this.getDataValue('totalSalary') * this.getDataValue('benefitsPercent')) / 100) / 100
     },
   },
 }, { paranoid: true })
