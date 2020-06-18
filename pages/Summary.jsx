@@ -12,15 +12,18 @@ const ref = React.createRef()
 
 const Print = styled.button`
   font-size: 18px;
-  margin: auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 20px auto;
   text-align: center;
   border: 3px solid #214080;
   border-radius: 3px;
   background-color: #774C9E;
   color: white;
   display: block;
+  width: 210px;
+`
+
+const Readout = styled.div`
+  margin: auto;
 `
 
 export default () => {
@@ -131,7 +134,7 @@ export default () => {
 
   return (
     <Page>
-      <div ref={ref}>
+      <Readout ref={ref}>
         <Title />
         <table>
           <thead>
@@ -269,7 +272,7 @@ export default () => {
             </tr>
           </tbody>
         </table>
-      </div>
+      </Readout>
       <Pdf targetRef={ref} filename="summary.pdf" onComplete={saveEntry}>
         {({ toPdf }) => <Print type="button" onClick={toPdf}>Generate Pdf</Print>}
       </Pdf>

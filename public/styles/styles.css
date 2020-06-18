@@ -10,54 +10,20 @@ body {
   text-align: center;
 }
 
-#form-container {
-  height: 900px;
-  width: 900px;
+table, th, td {
+  text-align: left;
+  border: 2px solid grey;
+  background-color: var(--OA-dark-navy);
+  color: white;
+  border-collapse: collapse;
+}
+
+table {
   margin: auto;
-  margin-top: 60px;
-  border: thick solid var(--OA-dark-navy);
-  border-radius: 15px;
-  background-color: var(--OA-tropical-blue);
 }
 
-#form {
-  display: inline-flex;
-  flex-direction: column;
-  margin-top: 10px;
-  align-content: center;
-  justify-content: content;
-}
-
-.form-group {
-  margin-bottom: 5px;
-  height: 45px;
-  width: 540px;
-  background: var(--OA-deep-navy);
-  border: 6px solid var(--OA-dark-navy);
-  border-radius: 15px;
-  transition: border-color 1s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.form-group:hover {
-  border-color: var(--OA-purple);
-  cursor: pointer;
-}
-.form-group:disabled {
-  pointer-events: none;
-  border-color: var(--OA-tropical-blue);
-}
-
-.input-item {
-  margin: auto;
-  width: 300px;
-  border-radius: 6px;
-}
-
-#form-title {
-  margin-top: 45px;
-  font-size: 3em;
+th, td {
+  height: 25px;
 }
 
 .hidden {

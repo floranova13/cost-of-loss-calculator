@@ -1,9 +1,5 @@
 import express from 'express'
 import path from 'path'
-
-// import  from './middlewares/jobPostings'
-// import  from './middlewares/recruiterFees'
-// import  from './middlewares/signingBonuses'
 import {
   getAllJobPostings, getJobPostingById, saveNewJobPosting, patchJobPostingCost, patchJobPostingNotes, deleteJobPosting,
 } from './controllers/jobPostings'
@@ -14,7 +10,9 @@ import {
 import {
   getAllSigningBonuses, getSigningBonusById, saveNewSigningBonus, patchSigningBonusAmount, deleteSigningBonus,
 } from './controllers/signingBonuses'
-import { getAllSalaries, getSalaryById } from './controllers/salaries'
+import {
+  getAllSalaries, getSalaryById, patchSalaryTotalSalary, patchSalaryBenefitsPercent,
+} from './controllers/salaries'
 import { getAllUserInputs, saveNewUserInput } from './controllers/userInputs'
 
 const app = express()
@@ -45,6 +43,8 @@ app.delete('/api/v1/signing-bonuses/:id', deleteSigningBonus)
 
 app.get('/api/v1/salaries', getAllSalaries)
 app.get('/api/v1/salaries/:id', getSalaryById)
+app.patch('/api/v1/salaries/totalSalary/:id', express.json(), patchSalaryTotalSalary)
+app.patch('/api/v1/salaries/benefitsPercent/:id', express.json(), patchSalaryBenefitsPercent)
 
 app.get('/api/v1/userInputs', getAllUserInputs)
 app.post('/api/v1/userInputs', express.json(), saveNewUserInput)
