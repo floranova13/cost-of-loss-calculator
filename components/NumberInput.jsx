@@ -8,12 +8,6 @@ const Name = styled.h3`
   font-weight: 600;
 `
 
-const Sign = styled(Name)`
-  display: inline-block;
-  position: absolute;
-  transform: translate(-15px 4px)
-`
-
 const NumberInput = styled.input`
   display: inline-block;
   text-align: center;
@@ -22,11 +16,10 @@ const NumberInput = styled.input`
   font-weight: 600;
 `
 
-export default ({ getter, setter, name, dollarSign }) => (
+export default ({ getter, setter, name }) => (
   <>
     <Name>{name}</Name>
     <div>
-      <Sign>{dollarSign ? '$' : ''}</Sign>
       <NumberInput
         type="number"
         min="0"
