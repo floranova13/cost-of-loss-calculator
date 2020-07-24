@@ -10,4 +10,4 @@ Companies need talent but are wary of the visa and immigration process. Using an
 The REST API back-end uses MySQL and Sequelize.
 
 ### React Front-end
-The React front-end shows allows clients to access the cost demo. And uses the Axios package to post user information when a PDF is printed.
+The React front-end shows allows to access the cost demo. And uses the Axios package to post user information when a PDF is printed.
